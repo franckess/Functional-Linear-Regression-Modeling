@@ -2,7 +2,8 @@
 
 ## Preface
 
-This academic paper was submitted for the degree of Master of Science at the University of Cape Town (South Africa). The study was conducted under the supervision of Associate Professor Sugnet Lubbe in the Department of Mathematical Statistics, University of Cape Town.
+This academic paper was submitted for the degree of Master of Science at the University of Cape Town (South Africa). The study was conducted under the supervision of A. Prof Sugnet Lubbe in the Department of Mathematical Statistics, University of Cape Town.
+Some of my R-scripts were done with the support of Dr. Shuichi Kawano, Department of Mathematical Sciences, Osaka Prefecture University, Japan.
 
 ## Abstract
 
