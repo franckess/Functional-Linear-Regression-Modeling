@@ -1,0 +1,385 @@
+% Chapter 4
+
+\chapter{Functional Linear Regression Modeling (FLRM)} % Main chapter title
+
+\label{Chapter4} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
+
+\lhead{Chapter 4. \emph{Functional Linear Regression Modeling}} % Change X to a consecutive number; this is for the header on each page - perhaps a shortened title
+
+%--------------------------------------------------------------------------------------
+%	SECTION 1
+%--------------------------------------------------------------------------------------
+
+This chapter will review some key concepts related to the \textit{Functional Linear Regression} model. Like in \textit{Multivariate Analysis}, \textit{Functional Linear Regression} model has appeared to be extremely useful in a broad range of applications including Bioscience and Time Series. A typical \textit{Functional Linear Regression} model intends to explore the variability of a scalar continuous (functional) response while considering how much of its variation is explainable by other variables.\\
+Linear regression models can be functional in one or both of two ways:
+\begin{itemize}
+\item The dependent or response variable is functional;
+\item One or more of the independent variables or covariates are functional.
+\end{itemize}
+Clearly, the functional-response case is an extension of the multivariate-response case with vectors converted into functions. The main change is that the regression coefficients now become regression functions with values $\beta_j(t)$ or $\beta_j(t,s)$ depending on the nature of the problem. Although the main focus of this chapter is on functional response predicted by one or more functional covariates, a preliminary look is done for all cases where the response variables are \textit{scalar} and \textit{multivariate}.\\ It should be noted that all inferential tools for \textit{Functional Linear Regression} models have been developed under the assumption that the covariate/response pairs are independent. 
+\clearpage
+
+\section{Preliminary Cases}
+
+The aim of this section is to predict a scalar/multivariate response from one or more functional covariates. Since \textit{Functional Linear Regression Modeling} has its roots from \textit{multivariate multiple regression modelling}, the final result of all derivations have the form:
+\begin{equation}
+\bm{Y} = \bm{Z \beta} + \bm{\epsilon}
+\end{equation}
+
+\subsection{Scalar response and Functional Independent Variables}\label{sec:scalar_resp}
+Let $\{Y_i,\text{ }i = 1,\dots,N \}$ be an $N$-vector of scalar responses and $\{X_{i m}(t),\text{ }m = 1,\dots,M\}$ are $M$ functional predictors. Using the definitions from Chapter~\ref{Chapter2}, the functions $X_{i m}(t)$ can be obtained using the smoothing techniques. The regression model that evaluates the relationship between the vector of scalar responses and the functional covariates is given by
+\begin{equation}\label{eq:flrm_scalar}
+Y_{i} = \beta_{0} + \sum_{m=1}^{M} \int_{\mathcal{T}_m} X_{i m}(t) \beta_{m}(t)\mathrm{dt} + \epsilon_{i}, \text{ } \forall i, m
+\end{equation}
+where $\beta_{0}$ is the usual intercept term that adjusts for the origin, $\beta_{m}(t)$ are the coefficient functions and $\epsilon_{i}$ are the error terms which are independently and normally distributed with mean $0$ and variance $\sigma^2_i$. Using the expansion in \eqref{fda_22} to reduce the degrees of freedom in the model further using basis functions, the functional predictors $X_{i m}(t)$ are expressed as
+\begin{equation}\label{eq:covariates_scalar}
+X_{i m}(t) = \sum_{k=1}^{K_m^{x}} c_{i m k} \phi_{m k} (t) = \bm{c}_{i m}^T \bm{\phi}_{m}(t),\text{ } \forall t \in \mathcal{T}_m
+\end{equation}
+In certain cases, $\bm{\phi}_{m}(t)$ may differ depending on how different the functional predictors are among $m=1,\dots,M$. Furthermore, the coefficient functions are represented by linear combinations of $K_m^{\beta}$ basis functions $\left\{\psi_{m 1}(t),\dots,\psi_{m K_m^{\beta}}(t) \right\}$, with the following form
+\begin{equation}\label{eq:coefficients_scalar}
+\beta_{m}(t) = \sum_{l=1}^{K_m^{\beta}} b_{m l}\psi_{m l}(t) = \bm{b}_{m}^T \bm{\psi}_m(t),\text{ } \forall t \in \mathcal{T}_m
+\end{equation}
+Replacing equations~\eqref{eq:covariates_scalar} and \eqref{eq:coefficients_scalar} in equation~\eqref{eq:flrm_scalar} yields
+\begin{align}\label{eq:flrm2_scalar}
+Y_{i} &= \beta_{0} + \sum_{m=1}^{M} \int_{\mathcal{T}_m} \bm{c}_{i m}^T \bm{\phi}_{m}(t)\bm{\psi}'_m(t)\bm{b}_{m}\mathrm{dt} + \epsilon_{i} \nonumber \\
+&= \beta_{0} + \sum_{m=1}^{M} \bm{c}_{i m}^T \bm{J}_{\phi \psi}^{(m)}\bm{b}_{m} + \epsilon_{i},
+\end{align}
+where $\bm{J}_{\phi \psi}^{(m)} = \int_{\mathcal{T}_m} \bm{\phi}_{m}(t)\bm{\psi}^T_m(t)\mathrm{dt}$ is the $K_m^{x} \times K_m^{\beta}$ cross-product matrix. Taking equation~\eqref{eq:flrm2_scalar} one step further, it can be rewritten as
+\begin{equation}
+\bm{Y} = \bm{Z}\bm{B} + \bm{\epsilon} 
+\end{equation}
+
+where
+\begin{center}
+$ \bm{Z}=\def\arraystretch{1} \begin{pmatrix}
+\bm{z}^T_1 \\
+\vdots\\
+\bm{z}^T_N
+\end{pmatrix} = \def\arraystretch{1}
+\begin{pmatrix}
+1 & \bm{c}_{1 1}^T \bm{J}_{\phi \psi}^{(1)} & \dots & \bm{c}_{1 M}^T \bm{J}_{\phi \psi}^{(M)} \\
+\vdots & \vdots & \ddots & \vdots \\
+1 & \bm{c}_{N 1}^T \bm{J}_{\phi \psi}^{(1)} & \dots & \bm{c}_{N M}^T \bm{J}_{\phi \psi}^{(M)}  
+\end{pmatrix}$,
+\end{center}
+
+\begin{center}
+$ \bm{B} =\def\arraystretch{1} \begin{pmatrix}
+\beta_{0} \\
+\bm{b}_1\\
+\vdots\\
+\bm{b}_{M}
+\end{pmatrix}$,
+\end{center}
+$\bm{Y}$ is the $N$-vector of scalar responses, $\bm{Z}$ is the $N \times \left(\sum_{m=1}^{M} K_m^{x} +1 \right)$ matrix of functional covariatees, $\bm{B}$ is the $\left(\sum_{m=1}^{M} K_m^{\beta} +1 \right) \times 1$ vector of functional coefficients, and $\bm{\epsilon}$ is the $N$-vector error terms.
+
+\subsection{Multivariate Scalar Response and Functional Independent Variables}
+Expanding from section~\ref{sec:scalar_resp}, consider the $N \times L$ matrix $\bm{Y}$ to be a matrix multivariate scalar responses. The regression model that evaluates the relationship between the matrix of scalar responses and the functional covariates is given by
+\begin{equation}\label{eq:flrm}
+Y_{ij} = \beta_{0 j} + \sum_{m=1}^{M} \int_{\mathcal{T}_m} X_{i m}(t) \beta_{m j}(t)\mathrm{dt} + \epsilon_{ij}, \text{ } \forall i, j
+\end{equation}
+where $\beta_{0 j}$ are the intercepts, $\beta_{m j}(t)$ are the coefficient functions and $\bm{\epsilon}_{ij} = \left(\epsilon_{i1},\dots,\epsilon_{iL} \right)'$ are independently and normally distributed with mean vector $\bm{0}$ and variance-covariance matrix $\Sigma$. As always, the idea is to reduce the degrees of freedom in the model using basis functions. Therefore, functional predictors $X_{i m}(t)$ are expressed as
+\begin{equation}\label{eq:covariates}
+X_{i m}(t) = \sum_{k=1}^{K_m^{x}} c_{i m k} \phi_{m k} (t) = \bm{c}_{i m}^T \bm{\phi}_{m}(t),\text{ } \forall t \in \mathcal{T}_m
+\end{equation}
+The coefficient functions are represented by linear combinations of $K_m^{\beta}$ basis functions $\left\{\psi_{m 1}(t),\dots,\psi_{m K_m^{\beta}}(t) \right\}$, with the following form
+\begin{equation}\label{eq:coefficients}
+\beta_{m j}(t) = \sum_{l=1}^{K_m^{\beta}} b_{m l j}\psi_{m l}(t) = \bm{b}_{m j}^T \bm{\psi}_m(t),\text{ } \forall t \in \mathcal{T}_m
+\end{equation}
+Replacing equations~\eqref{eq:covariates} and \eqref{eq:coefficients} in equation~\eqref{eq:flrm} yields
+\begin{align}\label{eq:flrm2}
+Y_{i j} &= \beta_{0 j} + \sum_{m=1}^{M} \int_{\mathcal{T}_m} \bm{c}_{i m}^T \bm{\phi}_{m}(t)\bm{\psi}'_m(t)\bm{b}_{m j}\mathrm{dt} + \epsilon_{ij} \nonumber \\
+&= \beta_{0 j} + \sum_{m=1}^{M} \bm{c}_{i m}^T \bm{J}_{\phi \psi}^{(m)}\bm{b}_{m j} + \epsilon_{i j},
+\end{align}
+where $\bm{J}_{\phi \psi}^{(m)} = \int_{\mathcal{T}_m} \bm{\phi}_{m}(t)\bm{\psi}'_m(t)\mathrm{dt}$ are the $K_m^{x} \times K_m^{\beta}$ cross-product matrices. Taking equation~\eqref{eq:flrm2} one step further, it can be rewritten as:
+\begin{equation}\label{multivar_flrm}
+\bm{\mathcal{Y}} = \bm{Z}\bm{\mathcal{B}} + \bm{E} 
+\end{equation}
+
+where
+\begin{center}
+$ \bm{Z}=\def\arraystretch{1} \begin{pmatrix}
+\bm{z}'_1 \\
+\vdots\\
+\bm{z}'_N
+\end{pmatrix} = \def\arraystretch{1}
+\begin{pmatrix}
+1 & \bm{c}_{1 m}^T \bm{J}_{\phi \psi}^{(1)} & \dots & \bm{c}_{1 M}^T \bm{J}_{\phi \psi}^{(M)} \\
+\vdots & \vdots & \ddots & \vdots \\
+1 & \bm{c}_{N m}^T \bm{J}_{\phi \psi}^{(1)} & \dots & \bm{c}_{N M}^T \bm{J}_{\phi \psi}^{(M)}  
+\end{pmatrix}$,
+\end{center}
+
+\begin{center}
+$ \bm{\mathcal{B}}=\def\arraystretch{1} \begin{pmatrix}
+\bm{b}'_{(0)} \\
+\vdots\\
+\bm{b}'_{(L)}
+\end{pmatrix}' = \def\arraystretch{1}
+\begin{pmatrix}
+\beta_{01} & \dots & \beta_{0 L} \\
+\beta_{11} & \dots & \beta_{1 L} \\
+\vdots & \ddots & \vdots \\
+\beta_{M1} & \dots & \beta_{M L}
+\end{pmatrix}$.
+\end{center} 
+$\bm{\mathcal{Y}}$ is the $N \times L$ matrix of scalar responses, $\bm{Z}$ the $N \times \left(\sum_{m=1}^{M} K_m^{\beta} +1 \right)$ matrix of functional covariates, $\bm{\mathcal{B}}$ the $\left(\sum_{m=1}^{M} K_m^{\beta} + 1 \right) \times L$ matrix of functional covariates, and $\bm{E}$ is the $N \times L$ matrix error terms.
+
+%--------------------------------------------------------------------------------------
+%	SECTION 2
+%--------------------------------------------------------------------------------------
+
+\section{Functional Response and Functional Independent \\ Variables}\label{Funct_2}
+In the previous section, the scenario involved scalar responses and functional covariates. In this section, the linear model is a fully \textit{Functional Linear Regression} model in which both the response and covariates are functions. This is given below:
+\begin{equation}\label{flrm3}
+Y_i(t) = \beta_{0} (t) + \sum_{m=1}^{M} \int_{\mathcal{T}_m} X_{im}(s) \beta_{m}(s,t)\mathrm{ds} + \epsilon_i(t), \text{ } \forall s \in \mathcal{T}_m \text{ \& } \forall t \in \mathcal{T} 
+\end{equation}
+The function $\beta_0(t)$ is a parameter function acting as the constant term in the standard regression setup, and allows for different functional origins for the functional response. The function $\beta_{m}(s,t)$ are bivariate coefficient functions which impose varying weights on $X_{im}(s)$ at arbitrary time $t \in \mathcal{T}_m$, and $\epsilon_i(t)$ are the error functions. Using the expansion in \eqref{fda_22}, the functional predictors $X_{i m}(t)$ are expressed as
+\begin{equation}\label{eq:covariates_fun}
+X_{i m}(s) = \sum_{j=1}^{K_m^{x}} \tilde{c}_{i m j} \phi_{m j} (s) = \tilde{\bm{c}}_{i m}^T \bm{\phi}_{m}(s),\text{ } \forall s \in \mathcal{T}_m,
+\end{equation}
+the functional responses $Y_i(t)$ ae given by
+\begin{equation}\label{eq:response_fun}
+Y_i(t) = \sum_{k=1}^{K_{y}} \tilde{d}_{ik} \psi_{k} (t) = \tilde{\bm{d}}_{i}^T \bm{\psi}(t),\text{ } \forall t \in \mathcal{T}_m.
+\end{equation}
+The expression of $\beta$ as a double expansion seems to be appropriate due to its double effect on both the predictors and response variables. The coefficient functions $\beta_m(s,t)$ are expressed as follows
+\begin{equation}\label{beta_fun}
+\beta_m(s,t) = \sum_{j,k} b_{mjk} \phi_{m j}(s) \psi_{k}(t) = \bm{\phi}^T_{m}(s) \bm{B}_m \bm{\psi}(t),
+\end{equation}
+where $\bm{B}_m$ is a $K_m^{x} \times K_{y}$ coefficient matrices. By centering the \textit{Functional Linear Regression} model~\eqref{flrm3} in the following way
+\begin{align}
+X^{*}_{im}(s) &= X_{im}(s) - \bar{X}_{im}(s) \nonumber \\
+			  &= \tilde{\bm{c}}^T_{im} \bm{\phi}(s) - \bar{\bm{c}}^T_{im} \bm{\phi}(s) \nonumber \\
+			  &= \bm{c}^T_{im} \bm{\phi}(s),\label{eq_cent1} \\
+Y^{*}_i(t) &= Y_i(t) - \bar{Y}_i(t) \nonumber \\
+		   &= \tilde{\bm{d}}_{i}^T \bm{\psi}(t) - \bar{\bm{d}}_{i}^T \bm{\psi}(t) \nonumber \\
+		   &= \bm{d}_{i}^T \bm{\psi}(t) \label{eq_cent2},
+\end{align}
+equation~\eqref{flrm3} now become
+\begin{equation}\label{flrm4}
+Y^{*}_i(t) = \sum_{m=1}^{M} \int_{\mathcal{T}_m} X^{*}_{im}(s) \beta_{m}(s,t)\mathrm{ds} + \epsilon^{*}_i(t). 
+\end{equation}
+From equations \eqref{beta_fun}, \eqref{eq_cent1} and \eqref{eq_cent2}, equation~\eqref{flrm4} have the following form:
+\begin{align}
+\bm{d}_{i}^T \bm{\psi}(t) &= \sum_{m=1}^{M} \int_{\mathcal{T}_m} \bm{c}^T_{im} \bm{\phi}(s) \bm{\phi}^T_{m}(s) \bm{B}_m \bm{\psi}(t)ds + \epsilon^{*}_i(t) \nonumber \\
+						  &= \sum_{m=1}^{M} \bm{c}^T_{im} \bm{J}_{\phi_m} \bm{B}_m \bm{\psi}(t) + \epsilon^{*}_i(t) \nonumber \\
+						  &= \bm{z}_i^T \bm{\mathcal{B}} \bm{\psi}(t)+ \epsilon^{*}_i(t) \label{eq:flrm5} 
+\end{align}
+
+where $\bm{z}_i = \left(\bm{c}^T_{i1} \bm{J}_{\phi_1},\dots,\bm{c}^T_{iM} \bm{J}_{\phi_M}\right)^T$ is a vector of length $\left[\sum_{m=1}^{M} K_m^{x}\right]$,\\  $\bm{J}_{\phi_m} = \int_{\mathcal{T}_m} \bm{\phi}(s) \bm{\phi}^T(s)ds$ which is $K_m^{x} \times K_m^{x}$ matrix, and $\bm{\mathcal{B}} = \left(\bm{B}_1,\dots,\bm{B}_M\right)^T$ is a $\left(\sum_{m=1}^{M} K_m^{x} \times K_{y}\right)$ matrix. Combining all the information above, the \textit{Functional Linear Regression} model for all the observations is
+\begin{equation}\label{B_est}
+\bm{D} \bm{\psi}(t) = \bm{Z} \bm{\mathcal{B}} \bm{\psi}(t) + \bm{\mathcal{E}}(t) 
+\end{equation}
+where $\bm{D}$ is a $N \times K_y$ matrix and $\bm{Z}$ is a matrix with dimensions $N \times \left(\sum_{m=1}^{M} K_m^{x}\right)$
+\clearpage
+\section{Model Estimation}
+The main focus is now to estimate the parameter matrix $\bm{\mathcal{B}}$ in the \textit{Functional Linear Regression} model \eqref{B_est}. The methods considered are the followings
+\begin{itemize}
+\item \texit{Least Square} method (in the FLRM context);
+\item \textit{Maximum Likelihood} method;
+\item \textit{Penalized Maximum Likelihood} method.
+\end{itemize}
+
+\subsection{Least Square method}
+\cite{olberd:ramsay} estimated $\bm{\mathcal{B}}$ in the model \eqref{B_est} by minimizing the integrated residual sum of squares, the result is now
+\begin{align}
+& \sum_{i=1}^{N} \int_{\mathcal{T}} \left[Y^{*}_i(t) - \sum_{m=1}^{M} \int_{\mathcal{T}_m} X^{*}_{im}(s) \beta_{m}(s,t)ds\right]^2 dt \nonumber \\
+&= \int_{\mathcal{T}} \text{tr} \left\{\left(\bm{D} \bm{\psi}(t) - \bm{Z} \bm{\mathcal{B}} \bm{\psi}(t)\right)\left(\bm{D} \bm{\psi}(t) - \bm{Z} \bm{\mathcal{B}} \bm{\psi}(t)\right)^T \right\} dt \nonumber \\
+&= \int_{\mathcal{T}} \text{tr} \left\{\left(\bm{D} - \bm{Z} \bm{\mathcal{B}} \right) \bm{\psi}(t)  \bm{\psi}^T(t) \left(\bm{D} - \bm{Z} \bm{\mathcal{B}} \right)^T \right\} dt \nonumber \\
+&= \text{tr} \left\{\left(\bm{D} - \bm{Z} \bm{\mathcal{B}} \right) \bm{J}_{\psi} \left(\bm{D} - \bm{Z} \bm{\mathcal{B}} \right)^T \right\} \nonumber \\
+&= \text{tr} \left\{\bm{D}\bm{J}_{\psi}\bm{D}^T - \bm{D}\bm{J}_{\psi}\bm{\mathcal{B}}^T\bm{Z}^T - \bm{Z}\bm{\mathcal{B}}\bm{J}_{\psi}\bm{D}^T + \bm{Z}\bm{\mathcal{B}} \bm{J}_{\psi} \bm{\mathcal{B}}^T \bm{Z}^T  \right\} \nonumber \\
+&= \text{tr} \left(\bm{D}\bm{J}_{\psi}\bm{D}^T\right) - 2 \text{tr} \left(\bm{\mathcal{B}}\bm{J}_{\psi}\bm{D}^T\bm{Z}\right) + \text{tr} \left(\bm{Z}^T \bm{Z}\bm{\mathcal{B}}\bm{J}_{\psi}\bm{\mathcal{B}}^T \right) \label{ls_flrm}
+\end{align}
+where $\bm{J}_{\psi} = \int_{\mathcal{T}} \bm{\psi}(t) \bm{\psi}^T(t)dt$ is a $K_y \times K_y$ matrix of basis functions. Computing the derivative of \eqref{ls_flrm} with respect to $\bm{\mathcal{B}}$ and set the result to zero gives
+\begin{align}
+& -2 \left(\bm{Z}^T \bm{D} \bm{J}_{\psi} \right) + 2\left(\bm{Z}^T\bm{Z} \bm{\mathcal{B}}\bm{J}_{\psi} \right) = \bm{0} \nonumber \\
+&\implies \bm{Z}^T \bm{D} \bm{J}_{\psi} = \bm{Z}^T\bm{Z} \bm{\mathcal{B}} \bm{J}_{\psi} \nonumber \\
+&\implies \text{vec}\left(\bm{Z}^T\bm{Z} \bm{\mathcal{B}} \bm{J}_{\psi}\right) = \text{vec} \left(\bm{Z}^T \bm{D} \bm{J}_{\psi}\right) \nonumber \\
+&\implies \left(\bm{J}_{\psi} \otimes \bm{Z}^T\bm{Z} \right) \text{vec}\left(\bm{\mathcal{B}}\right) = \text{vec} \left(\bm{Z}^T \bm{D} \bm{J}_{\psi}\right) \nonumber \\
+&\implies \text{vec}\left(\hat{\bm{\mathcal{B}}}\right) = \left(\bm{J}_{\psi} \otimes \bm{Z}^T\bm{Z} \right)^{-1} \text{vec} \left(\bm{Z}^T \bm{D} \bm{J}_{\psi}\right)\label{ls_flrm2} 
+\end{align}
+where $\text{vec}\left(\bm{\mathcal{B}}\right)$ is a column vector of length $\left(\sum_{m=1}^{M} K_m^{x}\right) \times K_y$ of $\bm{\mathcal{B}}$.
+
+\subsection{Maximum Likelihood method}
+Suppose the error function from equation~\eqref{flrm4} $\epsilon^{*}_i(t)$ are represented by linear combinations of basis functions $\psi_k(t)$, the same as the functional response $Y_i^{*}(t)$, that is,
+\begin{equation}
+\epsilon^{*}_i (t) = \sum_{k=1}^{K_y} e_{ik}\psi_k(t) = \bm{e}^T_i \bm{\psi}(t).
+\end{equation}
+Therefore, the above result in equation~\eqref{eq:flrm5} gives the following
+\begin{equation}\label{flrm6}
+\bm{d}_{i}^T \bm{\psi}(t) = \bm{z}_i^T \bm{\mathcal{B}} \bm{\psi}(t)+ \bm{e}^T_i \bm{\psi}(t)
+\end{equation}
+where $\bm{e}_i = \left(e_{i1},\dots,e_{i K_y}\right)^T$ is a $K_y$-dimensional vector.\\ It is assumed that $\bm{e}_i \stackrel{i.i.d}{\sim} \mathcal{N}(\bm{0}, \bm{\Sigma})$ with $\bm{\Sigma}$ be the $K_y \times K_y$ variance-covariance matrix. By multiplying both sides of equation~\eqref{flrm6} from the right by $\bm{\psi}^T(t)$ and integrating the whole equation over the space $\mathcal{T}$ leads to
+\begin{align}
+& \bm{d}_{i}^T \bm{\psi}(t)\bm{\psi}^T(t) = \bm{z}_i^T \bm{\mathcal{B}} \bm{\psi}(t)\bm{\psi}^T(t)+ \bm{e}^T_i \bm{\psi}(t)\bm{\psi}^T(t) \nonumber \\
+\implies & \int_{\mathcal{T}} \bm{d}_{i}^T \bm{\psi}(t)\bm{\psi}^T(t) dt = \int_{\mathcal{T}} \bm{z}_i^T \bm{\mathcal{B}} \bm{\psi}(t)\bm{\psi}^T(t) dt +  \int_{\mathcal{T}} \bm{e}^T_i \bm{\psi}(t)\bm{\psi}^T(t) dt \nonumber \\
+\implies & \bm{d}_{i}^T \bm{J}_{\psi} = \bm{z}_i^T \bm{\mathcal{B}} \bm{J}_{\psi}+ \bm{e}^T_i \bm{J}_{\psi}.
+\end{align}
+The matrix $\bm{J}_{\psi}$ is nonsingular, therefore the simplified result from the above equation is:
+\begin{equation}\label{eq:flrm7}
+\bm{d}_{i}^T = \bm{z}_i^T \bm{\mathcal{B}}  + \bm{e}^T_i,\text{ }i = 1,2,\dots,N.
+\end{equation}
+The above equation can be rewritten as
+\begin{equation}\label{flrm7}
+\bm{D} = \bm{Z} \bm{\mathcal{B}}  + \bm{E},
+\end{equation}
+which has the same form as a multivariate regression model defined in equation~\eqref{multivar_flrm}.
+It can be noted that equation~\eqref{eq:flrm7} can be rewritten by transposing the whole equation as follows
+\begin{equation}
+\bm{d}_{i} = \bm{\mathcal{B}}^T\bm{z}_i  + \bm{e}_i,\text{ }i = 1,2,\dots,N.
+\end{equation}
+The probability density for a functional response $Y_i$ given a functional predictor is
+\begin{equation}\label{flrm8}
+f(\bm{Y}_i|\bm{\theta}) = \dfrac{1}{(2 \pi)^{K_y/2} |\bm{\Sigma}|^{1/2}} \times \exp \left\{-\dfrac{1}{2}\left(\bm{d}_{i} - \bm{\mathcal{B}}^T\bm{z}_i\right)^T \bm{\Sigma}^{-1} \left(\bm{d}_{i} - \bm{\mathcal{B}}^T\bm{z}_i\right) \right\},
+\end{equation}
+where $\bm{\theta} = \left\{\bm{\mathcal{B}},\bm{\Sigma} \right\}$. The log-likelihood function is
+\begin{align}
+l(\bm{Y}|\bm{\theta}) &= -\dfrac{N}{2} \text{log}|\bm{\Sigma}| - \dfrac{1}{2} \sum_{i=1}^{N} \left\{\left(\bm{d}_{i} - \bm{\mathcal{B}}^T\bm{z}_i\right)^T \bm{\Sigma}^{-1} \left(\bm{d}_{i} - \bm{\mathcal{B}}^T\bm{z}_i\right) \right\} -\dfrac{N K_y}{2} \text{log}(2 \pi) \nonumber \\
+& \propto -\dfrac{N}{2} \text{log}|\bm{\Sigma}| - \dfrac{1}{2} \sum_{i=1}^{N} \text{tr} \left\{\bm{\Sigma}^{-1}\left(\bm{d}_{i} - \bm{\mathcal{B}}^T\bm{z}_i\right) \left(\bm{d}_{i} - \bm{\mathcal{B}}^T\bm{z}_i\right)^T \right\} \nonumber \\
+&= -\dfrac{N}{2} \text{log}|\bm{\Sigma}| - \dfrac{1}{2} \text{tr}  \left\{\bm{\Sigma}^{-1} \sum_{i=1}^{N} \left(\bm{d}_{i} - \bm{\mathcal{B}}^T\bm{z}_i\right) \left(\bm{d}_{i} - \bm{\mathcal{B}}^T\bm{z}_i\right)^T \right\} \nonumber \\
+&= -\dfrac{N}{2} \text{log}|\bm{\Sigma}| - \dfrac{1}{2} \text{tr}  \left\{\bm{\Sigma}^{-1} \left(\bm{D} - \bm{Z} \bm{\mathcal{B}}\right)^T \left(\bm{D} - \bm{Z} \bm{\mathcal{B}}\right) \right\} \label{flrm9}
+\end{align}
+with $l(\bm{Y}|\bm{\theta}) = \sum_{i=1}^{N} \text{log} f(\bm{Y}_i|\bm{\theta})$. Taking the derivatives of the above equation with respect to $\bm{\Sigma}^{-1}$ and $\bm{\mathcal{B}}$ gives:
+\begin{align}\label{optimflrm}
+& \dfrac{\partial l(\bm{Y}|\bm{\theta})}{\partial \bm{\mathcal{B}}} = \bm{Z}^T\bm{D}\bm{\Sigma}^{-1} - \bm{Z}^T\bm{Z}\bm{\mathcal{B}}\bm{\Sigma}^{-1} \nonumber \\
+& \dfrac{\partial l(\bm{Y}|\bm{\theta})}{\partial \bm{\Sigma}^{-1}} = \dfrac{N}{2}\bm{\Sigma}-\dfrac{1}{2}\left(\bm{D} - \bm{Z} \bm{\mathcal{B}}\right)^T \left(\bm{D} - \bm{Z} \bm{\mathcal{B}}\right) \nonumber
+\end{align}
+Therefore, Equating the above results to $\bm{0}$
+\begin{equation}
+\hat{\bm{\mathcal{B}}} = \left(\bm{Z}^T \bm{Z}\right)^{-1} \bm{Z}^T \bm{D},\text{   and   },\hat{\bm{\Sigma}} = \dfrac{1}{N} \left(\bm{D} - \bm{Z} \hat{\bm{\mathcal{B}}}\right)^T \left(\bm{D} - \bm{Z} \hat{\bm{\mathcal{B}}}\right)
+\end{equation}
+
+\subsection{Penalized Maximum Likelihood method}\label{PML method}
+Dealing with \textit{Functional Linear Regression} implies an infinite number of independent variables to predict a $\left(N \times \infty\right)$-matrix of response variables. The solution is to model the weighting information to be sufficiently smooth, this implies that the penalty term involves the coefficient functions.\\
+Using a similar approach as in equation~\eqref{penalized_likelihood}, the penalized log-likelihood function is given by
+\begin{equation}\label{pen_flrm2}
+l_{\bm{\Lambda}}(\bm{\theta}) = l(\bm{Y}|\bm{\theta}) - \dfrac{N}{2} \text{tr} \left\{\bm{\mathcal{B}}^T \left(\bm{\Lambda}_M \odot \bm{\Omega} \right) \bm{\mathcal{B}} \right\}
+\end{equation}
+
+where $\bm{\Lambda}_M$ is a $\left(\sum_{m=1}^{M} K_m^{x}\right) \times \left(\sum_{m=1}^{M} K_m^{x}\right)$ matrix of regularization parameters $\lambda_1,\dots,\lambda_M$, that is $\bm{\Lambda}_M = \bm{\lambda}_M \bm{\lambda}^T_M$ with $\bm{\lambda}_M = \left(\sqrt{\lambda_1} \bm{\big{1}}^T_{K_1^{x}},\dots,\sqrt{\lambda_M} \bm{\big{1}}^T_{K_M^{x}} \right)^T$.
+\clearpage
+$\bm{\Omega}$ is a $\left(\sum_{m=1}^{M} K_m^{x}\right) \times \left(\sum_{m=1}^{M} K_m^{x}\right)$ positive semi-definite matrix that has the form:
+
+\begin{center}
+$\bm{\Omega} = \def\arraystretch{1.5}\begin{pmatrix}
+\bm{\Omega}_1 & \dots & \bm{0}\\
+\vdots & \ddots & \vdots\\
+\bm{0} & \dots & \bm{\Omega}_M
+\end{pmatrix}$,
+\end{center}
+
+with $\bm{\Omega}_m \text{ }(m = 1,\dots,M)$ being $K_m^{x} \times K_m^{x}$ positive semi-definite matrices.
+\\
+Typically, $\bm{\Omega}_m = \bm{\Delta}^T_s \bm{\Delta}_s$ where $\bm{\Delta}_s$ is an $\left(K_m^{x} -s\right) \times K_m^{x}$ matrix that represents the $s^{th}$ difference operator (see section~\ref{ML_method}). The function~\eqref{pen_flrm2} can be rewritten as follows:
+\begin{equation}\label{pen_flrm3}
+l_{\bm{\Lambda}}(\bm{\theta}) \propto -\dfrac{N}{2} \text{log}|\bm{\Sigma}| - \dfrac{1}{2} \text{tr}  \left\{\bm{\Sigma}^{-1} \left(\bm{D} - \bm{Z} \bm{\mathcal{B}}\right)^T \left(\bm{D} - \bm{Z} \bm{\mathcal{B}}\right) \right\}-\dfrac{N}{2} \text{tr} \left\{\bm{\mathcal{B}}^T \left(\bm{\Lambda}_M \odot \bm{\Omega} \right) \bm{\mathcal{B}}\right\}
+\end{equation}
+
+Maximizing equation~\eqref{pen_flrm3} with respect to $\bm{\mathcal{B}}$ and $\bm{\Sigma}^{-1}$ is done as follows:
+
+\subsubsection*{Maximizing with respect to $\bm{\mathcal{B}}$}
+\begin{align}
+l_{\bm{\Lambda}}(\bm{\theta}) &\propto - \dfrac{1}{2} \text{tr}  \left\{\bm{\Sigma}^{-1} \left(\bm{D} - \bm{Z} \bm{\mathcal{B}}\right)^T \left(\bm{D} - \bm{Z} \bm{\mathcal{B}}\right) \right\}-\dfrac{N}{2} \text{tr} \left\{\bm{\mathcal{B}}^T \left(\bm{\Lambda}_M \odot \bm{\Omega} \right) \bm{\mathcal{B}}\right\} -\dfrac{N}{2} \text{log}|\bm{\Sigma}| \nonumber \\
+&= -\dfrac{1}{2} \text{tr} \left\{\bm{\Sigma}^{-1} \left(\bm{D}^T\bm{D} - \bm{D}^T \bm{Z}\bm{\mathcal{B}} - \bm{\mathcal{B}}^T\bm{Z}^T\bm{D} \right + \bm{\mathcal{B}}^T\bm{Z}^T \bm{Z}\bm{\mathcal{B}})  \right\} - \dfrac{N}{2}\text{tr} \left\{\bm{\mathcal{B}}^T \left(\bm{\Lambda}_M \odot \bm{\Omega} \right) \bm{\mathcal{B}}\right\} \nonumber \\
+& \quad \quad -\dfrac{N}{2} \text{log}|\bm{\Sigma}| \nonumber \\
+&= -\dfrac{1}{2} \text{tr} \left(\bm{D}\bm{\Sigma}^{-1}\bm{D}^T\right) + \text{tr} \left(\bm{\mathcal{B}}\bm{\Sigma}^{-1}\bm{D}^T\bm{Z}\right) - \dfrac{1}{2}\text{tr} \left(\bm{Z}^T \bm{Z}\bm{\mathcal{B}}\bm{\Sigma}^{-1}\bm{\mathcal{B}}^T \right)- \dfrac{N}{2} \text{tr}\left\{\bm{\mathcal{B}}^T \left(\bm{\Lambda}_M \odot \bm{\Omega} \right) \bm{\mathcal{B}}\right\} \nonumber \\
+& \quad \quad  -\dfrac{N}{2} \text{log}|\bm{\Sigma}| \label{eq21}
+\end{align}
+The first derivative of equation~\eqref{eq21} with respect to $\bm{\mathcal{B}}$ is given by
+\begin{equation*}
+\dfrac{\partial l_{\bm{\Lambda}}(\bm{\theta})}{\partial \bm{\mathcal{B}}} = \left(\bm{Z}^T \bm{D} \bm{\Sigma}^{-1} \right) - \left(\bm{Z}^T\bm{Z} \bm{\mathcal{B}}\bm{\Sigma}^{-1} \right) - N \left(\bm{\Lambda}_M \odot \bm{\Omega} \right) \bm{\mathcal{B}}
+\end{equation*}
+Equating the above equation to $\bm{0}$ implies the followings:
+\begin{align}
+& \text{      } \left(\bm{Z}^T \bm{D} \bm{\Sigma}^{-1} \right) - \left(\bm{Z}^T\bm{Z} \bm{\mathcal{B}}\bm{\Sigma}^{-1} \right) - N \left(\bm{\Lambda}_M \odot \bm{\Omega} \right) \bm{\mathcal{B}} = \bm{0} \nonumber \\
+& \implies \bm{Z}^T \bm{D} \bm{\Sigma}^{-1} = \bm{Z}^T\bm{Z} \bm{\mathcal{B}}\bm{\Sigma}^{-1} + N \left(\bm{\Lambda}_M \odot \bm{\Omega} \right) \bm{\mathcal{B}} \nonumber \\
+& \implies \text{vec}\left(\bm{Z}^T \bm{D} \bm{\Sigma}^{-1}\right) = \text{vec} \left[\bm{Z}^T\bm{Z} \bm{\mathcal{B}}\bm{\Sigma}^{-1} + N \left(\bm{\Lambda}_M \odot \bm{\Omega} \right) \bm{\mathcal{B}} \bm{I}_{K_y}\right] \nonumber \\
+& \implies \left(\bm{\Sigma}^{-1} \otimes \bm{Z}^T \right) \text{vec}\left(\bm{D}\right) = \left[\bm{\Sigma}^{-1} \otimes \bm{Z}^T\bm{Z} + N \bm{I}_{K_y} \otimes \left(\bm{\Lambda}_M \odot \bm{\Omega} \right)\right]\text{vec}\left(\bm{\mathcal{B}}\right) \nonumber \\
+& \implies \text{vec}\left(\hat{\bm{\mathcal{B}}}\right) = \left[\hat{\bm{\Sigma}}^{-1} \otimes \bm{Z}^T\bm{Z} + N \bm{I}_{K_y} \otimes \left(\bm{\Lambda}_M \odot \bm{\Omega} \right)\right]^{-1}\left(\hat{\bm{\Sigma}}^{-1} \otimes \bm{Z}^T \right) \text{vec}\left(\bm{D}\right)_{\text{  }\blacksquare} \label{betahat2}
+\end{align}
+
+\subsubsection*{Maximizing with respect to $\bm{\Sigma}^{-1}$}
+The first derivative of equation~\eqref{pen_flrm3} with respect to $\bm{\Sigma}^{-1}$ is given by
+\begin{equation*}
+\dfrac{\partial l_{\bm{\Lambda}}(\bm{\theta})}{\partial \bm{\Sigma}^{-1}} = \dfrac{N}{2}\bm{\Sigma}-\dfrac{1}{2}\left(\bm{D} - \bm{Z} \bm{\mathcal{B}}\right)^T \left(\bm{D} - \bm{Z} \bm{\mathcal{B}}\right)
+\end{equation*}
+Equating the above equation to $\bm{0}$ gives the following:
+\begin{align}
+& \dfrac{N}{2}\bm{\Sigma}-\dfrac{1}{2}\left(\bm{D} - \bm{Z} \bm{\mathcal{B}}\right)^T \left(\bm{D} - \bm{Z} \bm{\mathcal{B}}\right) = \bm{0} \nonumber \\
+& \implies \hat{\bm{\Sigma}} = \dfrac{1}{N} \left(\bm{D} - \bm{Z} \hat{\bm{\mathcal{B}}}\right)^T \left(\bm{D} - \bm{Z} \hat{\bm{\mathcal{B}}}\right)\label{sigma_hat}
+\end{align}
+The maximum penalized likelihood estimator of $\bm{D}$ is therefore given by:
+\begin{align}
+\text{vec} (\hat{\bm{D}}) &= \text{vec} \left(\bm{Z} \hat{\bm{\mathcal{B}}}\right) \nonumber \\
+&= \text{vec} \left(\bm{Z} \hat{\bm{\mathcal{B}}} \bm{I}_{K_y}\right) \nonumber \\
+&= \left(\bm{I}_{K_y} \otimes \bm{Z} \right)\text{vec} (\hat{\bm{\mathcal{B}}}) \nonumber \\
+&= \left(\bm{I}_{K_y} \otimes \bm{Z} \right)\left[\hat{\bm{\Sigma}}^{-1} \otimes \bm{Z}^T\bm{Z} + N \bm{I}_{K_y} \otimes \left(\bm{\Lambda}_M \odot \bm{\Omega} \right)\right]^{-1}\left(\hat{\bm{\Sigma}}^{-1} \otimes \bm{Z}^T \right) \text{vec}\left(\bm{D}\right) \nonumber \\
+&= \bm{S}_{\bm{\Lambda}} \text{vec}\left(\bm{D}\right) \label{hat_flrm}
+\end{align}
+
+where $\bm{S}_{\bm{\Lambda}} = \left(\bm{I}_{K_y} \otimes \bm{Z} \right)\left[\hat{\bm{\Sigma}}^{-1} \otimes \bm{Z}^T\bm{Z} + N \bm{I}_{K_y} \otimes \left(\bm{\Lambda}_M \odot \bm{\Omega} \right)\right]^{-1}\left(\hat{\bm{\Sigma}}^{-1} \otimes \bm{Z}^T \right)$ is a hat matrix for $\text{vec}\left(\bm{D}\right)$. Substituting the maximum likelihood estimator $\hat{\bm{\theta}} = \{\hat{\bm{\Sigma}},\hat{\bm{\mathcal{B}}}\}$ into \eqref{flrm8}, the result is
+\begin{equation}\label{flrm_final}
+f(\bm{Y}_i|\bm{\theta}) = \dfrac{1}{(2 \pi)^{K_y/2} |\hat{\bm{\Sigma}}|^{1/2}} \times \exp \left\{-\dfrac{1}{2}\left(\bm{d}_{i} - \hat{\bm{\mathcal{B}}}^T\bm{z}_i\right)^T \hat{\bm{\Sigma}}^{-1} \left(\bm{d}_{i} - \hat{\bm{\mathcal{B}}}^T\bm{z}_i\right) \right\}.
+\end{equation}
+Now that the penalized maximum likelihood estimator of $\hat{\bm{D}}$ is derived, the predicting values for the functional response $\hat{\bm{Y}}(t)$  are therefore:
+\begin{equation}
+\hat{\bm{Y}}(t) = \hat{\bm{D}} \bm{\psi} (t), \quad \forall t \in \mathcal{T}
+\end{equation}
+ 
+
+\section{Model Selection Criteria}\label{model_crit4}
+When applying the regularization method to select the statistical model (i.e. equation~\ref{flrm_final}), it makes sense to look for the selected set of model parameters that leads to the model that minimizes the value of these criteria. The following model criteria are derived from the ones discussed in Chapter~\ref{Chapter2} with the particularity of being improved to evaluate \textit{Functional Linear Regression} models.
+
+\subsection{Generalized Cross-Validation}
+Using similar ideas as in equation~\eqref{gcv}, the \textit{Generalized Cross-Validation} for \textit{Functional Linear Regression} model \ref{flrm_final} is defined as:
+\begin{equation}\label{flrm_gcv}
+\text{GCV} = \frac{\text{tr}\left\{\left(\bm{D} - \bm{Z} \hat{\bm{\mathcal{B}}}\right)^T \left(\bm{D} - \bm{Z} \hat{\bm{\mathcal{B}}}\right)\right\}}{NK_y \left(1-\text{tr}\left(\bm{S}_{\bm{\Lambda}}\right)/(NK_y)\right)^2},
+\end{equation}
+where $\bm{S}_{\bm{\Lambda}}$ is the \textit{hat} matrix given in equation \eqref{hat_flrm}.
+ 
+\subsection{Modified AIC}
+Using the result given in section~\ref{mAIC}, the mAIC for evaluating \eqref{flrm_final} is
+\begin{equation}\label{flrm_maic}
+\text{mAIC} = -2 \sum_{i=1}^{N} \text{log} f(\bm{Y}_i|\hat{\bm{\theta}}) + 2\text{tr}(\bm{S}_{\bm{\Lambda}})
+\end{equation}
+
+\subsection{Generalized Information Criteria}\label{gic_d}
+Using the result that was derived in section~\ref{GIC}, the GIC for model selection in the context of \textit{Functional Linear Regression} modelling is given by
+\begin{equation}\label{flrm_gic}
+\text{GIC} = -2 \sum_{i=1}^{N} \text{log } f(\bm{Y}_i|\hat{\bm{\theta}}) + 2 \text{tr} \left\{\bm{R}_{\bm{\Lambda}}(\hat{\bm{\theta}})^{-1} \bm{Q}_{\bm{\Lambda}}(\hat{\bm{\theta}})\right\},
+\end{equation}
+
+where $\bm{R}_{\bm{\Lambda}}(\hat{\bm{\theta}})$ and $\bm{Q}_{\bm{\Lambda}}(\hat{\bm{\theta}})$ are given by
+\begin{align}
+& \bm{R}_{\bm{\Lambda}}(\hat{\bm{\theta}}) = -\dfrac{1}{N} \sum_{i=1}^{N} \dfrac{\partial^2}{\partial \bm{\theta} \partial \bm{\theta}^T} \left\{\text{log }f(\bm{Y}_i|\hat{\bm{\theta}}) - \dfrac{1}{2}\text{tr} \left\{\bm{\mathcal{B}}^T \left(\bm{\Lambda}_M \odot \bm{\Omega} \right) \bm{\mathcal{B}}\right\} \right\} \nonumber \\
+& \text{and} \nonumber \\
+& \bm{Q}_{\bm{\Lambda}}(\hat{\bm{\theta}}) = \dfrac{1}{N} \sum_{i=1}^{N} \dfrac{\partial}{\partial \bm{\theta}} \left\{\text{log }f(\bm{Y}_i|\hat{\bm{\theta}}) - \dfrac{1}{2}\text{tr} \left\{\bm{\mathcal{B}}^T \left(\bm{\Lambda}_M \odot \bm{\Omega} \right) \bm{\mathcal{B}} \right\} \right\}\dfrac{\partial}{\partial \bm{\theta}^T}\text{log }f(\bm{Y}_i|\hat{\bm{\theta}}). \nonumber
+\end{align}
+Note the elements in the four quadrants of $\bm{R}_{\bm{\Lambda}}(\hat{\bm{\theta}})$ are:
+\begin{align}
+& R^{11}_{\bm{\Lambda}}(\hat{\bm{\theta}}) = \bm{Z}^T \hat{\bm{\Sigma}}^{-1} \bm{Z} - N \left(\bm{\Lambda}_M \odot \bm{\Omega} \right); \nonumber \\
+& R^{12}_{\bm{\Lambda}}(\hat{\bm{\theta}}) = N \bm{D}^T\bm{Z} + N \hat{\bm{\mathcal{B}}}^T \bm{Z}^T\bm{Z}; \nonumber \\
+& R^{21}_{\bm{\Lambda}}(\hat{\bm{\theta}}) = \bm{Z}^T\bm{D} + \bm{Z}^T\bm{Z}\hat{\bm{\mathcal{B}}}; \nonumber \\
+& R^{22}_{\bm{\Lambda}}(\hat{\bm{\theta}}) = \dfrac{N}{2} \mathbb{I}_{K_y}. \nonumber
+\end{align}
+Similarly, the elements in the four quadrants of $\bm{Q}_{\bm{\Lambda}}(\hat{\bm{\theta}})$ are:
+\begin{align}
+& Q^{11}_{\bm{\Lambda}}(\hat{\bm{\theta}}) = \left[\bm{Z}^T\bm{D}\hat{\bm{\Sigma}}^{-1} - \bm{Z}^T\bm{Z}\hat{\bm{\mathcal{B}}}\hat{\bm{\Sigma}}^{-1}-N \left(\bm{\Lambda}_M \odot \bm{\Omega} \right)\hat{\bm{\mathcal{B}}}\right]\left[\bm{Z}^T\bm{D}\hat{\bm{\Sigma}}^{-1} - \bm{Z}^T\bm{Z}\hat{\bm{\mathcal{B}}}\hat{\bm{\Sigma}}^{-1}\right]^T; \nonumber \\
+& Q^{12}_{\bm{\Lambda}}(\hat{\bm{\theta}}) = \left[\bm{Z}^T\bm{D}\hat{\bm{\Sigma}}^{-1} - \bm{Z}^T\bm{Z}\hat{\bm{\mathcal{B}}}\hat{\bm{\Sigma}}^{-1}-N \left(\bm{\Lambda}_M \odot \bm{\Omega} \right)\hat{\bm{\mathcal{B}}}\right]\left[\dfrac{N}{2}\hat{\bm{\Sigma}}-\dfrac{1}{2}\left(\bm{D} - \bm{Z} \hat{\bm{\mathcal{B}}}\right)^T \left(\bm{D} - \bm{Z} \hat{\bm{\mathcal{B}}}\right) \right]^T; \nonumber \\
+& Q^{21}_{\bm{\Lambda}}(\hat{\bm{\theta}}) = \left[\dfrac{N}{2}\hat{\bm{\Sigma}}-\dfrac{1}{2}\left(\bm{D} - \bm{Z} \hat{\bm{\mathcal{B}}}\right)^T \left(\bm{D} - \bm{Z} \hat{\bm{\mathcal{B}}}\right) \right]\left[\bm{Z}^T\bm{D}\hat{\bm{\Sigma}}^{-1} - \bm{Z}^T\bm{Z}\hat{\bm{\mathcal{B}}}\hat{\bm{\Sigma}}^{-1}\right]^T; \nonumber \\
+& Q^{22}_{\bm{\Lambda}}(\hat{\bm{\theta}}) = \left[\dfrac{N}{2}\hat{\bm{\Sigma}}-\dfrac{1}{2}\left(\bm{D} - \bm{Z} \hat{\bm{\mathcal{B}}}\right)^T \left(\bm{D} - \bm{Z} \hat{\bm{\mathcal{B}}}\right) \right]\left[\dfrac{N}{2}\hat{\bm{\Sigma}}-\dfrac{1}{2}\left(\bm{D} - \bm{Z} \hat{\bm{\mathcal{B}}}\right)^T \left(\bm{D} - \bm{Z} \hat{\bm{\mathcal{B}}}\right) \right]^T\nonumber
+\end{align}
+A more thorough derivation of the above results can be found in the Appendix~\ref{AppendixB}.
+
+\subsection{Generalized Bayesian Information Criterion}
+Based on the result from section~\ref{GBIC}, the GBIC for evaluating the model \ref{flrm_final} fitted by the penalized maximum likelihood method is given by
+\begin{align}
+\text{GBIC} =& -2 \sum_{i=1}^{N} \text{log} f(\bm{Y}_i|\hat{\bm{\theta}}) + N \text{tr} \left\{\hat{\bm{\mathcal{B}}}^T \left(\bm{\Lambda}_M \odot \bm{\Omega} \right) \hat{\bm{\mathcal{B}}} \right\} \nonumber \\ 
+& + (r + K_y q)\text{log}N - (r+K_y q)\text{log}(2\pi) \nonumber \\
+& - K_y \text{log}|\bm{\Lambda}_M \odot \bm{\Omega}|_{+} + \text{log}|\bm{R}_{\bm{\Lambda}}(\hat{\bm{\theta}})|
+\end{align}
+where $q = p - \text{rank}(\bm{\Omega})$, $p = \sum_{m} K^{x}_{m}$, $r = \dfrac{K_y(K_y+1)}{2}$ and $\bm{R}_{\bm{\Lambda}}(\hat{\bm{\theta}})$ is as defined in section~\ref{gic_d}. For a detailed derivation of the above equation consult \cite{Matsui2009}.
+
+\section{Closing Comments}
+This chapter reviewed some of the key concepts linked to Functional Linear Regression Model. Three different forms of Functional Linear models were discussed; on one hand \textit{Functional Linear Regression} models when the response is multivariate and on the other hand \textit{Functional Linear Regression} models when the response is functional. A particular emphasis was placed on the latter. The Functional Linear Regression models were estimated using \textit{Least Square} method (in the FLRM context); \textit{Maximum Likelihood} method and \textit{Penalized Maximum Likelihood} method. A crucial problem in constructing Functional Linear Regression models using \textit{Penalized Maximum Likelihood} method was the selection of the smoothing parameters. For that purpose, improved model criteria had to be derived from the ones mentioned in Chapter~\ref{Chapter2}: \textit{Generalized Cross-Validation} with $\bm{S}_{\bm{\Lambda}}$ as the \textit{hat} matrix; \textit{Generalized Information}; \textit{modified Akaike Information Criteria} and \textit{Generalized Bayesian Information Criteria}.\\
+\textindent In the next chapter, an application of the \textit{Penalized Maximum Likelihood} will be performed on the \texttt{Aemet} dataset from \cite{fda.usc}.

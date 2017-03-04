@@ -1,0 +1,381 @@
+% Chapter 3
+
+\chapter{Mathematics of Functional Data Analysis} % Main chapter title
+
+\label{Chapter3} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
+
+\lhead{Chapter 3. \emph{Mathematics of Functional Data Analysis}} % Change X to a consecutive number; this is for the header on each page - perhaps a shortened title
+
+%--------------------------------------------------------------------------------------
+%	SECTION 1
+%--------------------------------------------------------------------------------------
+
+Chapter~\ref{Chapter2} introduced the some relevant tools used when one has to perform analysis in the Functional Data framework. In this Chapter, the focus will be on providing mathematical foundations to understand the connection between Functional Analysis and Functional Data Analysis. One of the most important results of this Chapter will be the \textit{Karhunen-Lo\'{e}ve} Theorem which provides solid explanations to the existence of equation~\eqref{fda_21}. This chapter is organised as follows: \textbf{section 3.1} provides some important definitions and theorems of Hilbert Space; \textbf{section 3.2} cements the concept of operators in Hilbert Space; \textbf{section 3.3} introduces important definitions and theorems of the $L^2$ Space; \textbf{section 3.4} recalls key results related to stochastic processes, \textbf{section 3.5} delves into the \textit{Karhunen-Lo\'{e}ve} Theorem and \textbf{section 3.6} summarises the key concepts of this Chapter.\\
+Throughout this Chapter, it is assumed that the all vector spaces considered are over the field $\mathbb{K} = \mathbb{R}$ or $\mathbb{C}$ where appropriate.
+\clearpage
+\section{Hilbert Spaces}
+This section serves a quick recall of some important results and definitions from Topology focusing on Hilbert spaces that will be used later in the chapter. 
+\begin{definition}
+Let $H$ be a vector space. An \textit{inner product} on $H$ is a function $\langle.,. \rangle$ : $H \times H \rightarrow \mathbb{K}$ such that for every $u, v, w \in H$ and $\alpha, \beta \in \mathbb{K}$,
+\begin{enumerate}
+\item $\langle u,u \rangle \geq 0$ and $\langle u,u \rangle = 0$ if and only if $u = 0_{H}$
+\item $\langle u,v \rangle = \overline{\langle v,u \rangle}$ (where $\overline{u}$ is defined as the conjugate of a vector u)
+\item $\langle \alpha u + \beta w,v \rangle = \alpha \langle u,v \rangle + \beta \langle w,v \rangle$.
+\end{enumerate}
+The pair $\left(H, \langle.,. \rangle\right)$ is called an \textit{inner product} or \textit{pre-Hilbert space}.
+\end{definition} 
+
+\begin{theorem}
+If $\left(H, \langle\cdot,\cdot \rangle\right)$ is an inner product space, then for every $u,v \in H$
+\begin{equation}
+|\left(u,v\right)|^2 \leq \langle u,u \rangle \langle v,v \rangle.
+\end{equation}
+\end{theorem}
+The above inequality is known as the \textit{Cauchy-Schwartz inequality} and is used to show the following:
+
+\begin{theorem}
+If $\left(H, \langle.,. \rangle\right)$ is an inner product space, then the function $||\cdot||: H \rightarrow \mathbb{R}$ defined by
+\begin{equation}
+||v|| := \sqrt{\langle v,v \rangle} \quad \forall v \in H
+\end{equation} 
+is a norm on $H$. This makes $\left(H, \langle.,. \rangle\right)$ a normed space and a metric space.\\
+A sequence $\left\{v_n\right\}$ in a normed space $H$ is said to converge to $v \in H$ if for every $\epsilon > 0$ there exists $N \in \mathbb{N}^{+}$ such that for every $n \geq N$, $||v_n - v|| \leq \epsilon$.
+\end{theorem}
+
+\begin{definition}
+A sequence $\left\{v_n\right\}$ in a normed space $H$ is a \textit{Cauchy sequence} if for every $\epsilon > 0$ there exists $N \in \mathbb{N}^{+}$, where if $n,m \geq N$, then $||v_n - v_m|| < \epsilon$.\\
+It can be proven that every convergent sequence is \textit{Cauchy}, but the converse does not hold in general.
+\end{definition}
+
+\begin{definition}
+An inner product space $H$ is \textit{complete} if for every Cauchy sequence $\left\{v_n\right\}$ in $H$, there exists $v \in H$ such that $v_n \rightarrow v$; i.e. $H$ is complete if every Cauchy sequence in $H$ converges to an element of $H$. A subset $V$ of $H$ is complete if every Cauchy sequence in $V$ converges to an element of $V$.
+\end{definition}\\
+
+A complete inner product space is called a \textit{Hilbert space}. An analogous result is also true for normed spaces in general; complete normed spaces are called \textit{Banach spaces}.
+\clearpage
+\section{Operators in a Hilbert Space}\label{Op_Hilb_Space_1}
+\begin{definition}
+A Hilbert space with an inner product $\langle.,. \rangle$ is separable if and only if there exists a countable set $U = \left\{u_n : n \in \mathbb{N} \right\}$ such that $\bar{U} = H$, in other words if and only if it has a countable dense subset. $\bar{U}$ is the closed set of $U$. 
+\end{definition}
+
+Consider a separable Hilbert space \textit{H} with inner product $\langle.,. \rangle$ which generates the norm $||\cdot||$, and denote by $\mathcal{L}$ the space of bounded (continuous) linear operators on $H$ with the norm defined as
+\begin{equation}
+||\Psi||_{\mathcal{L}} = \text{sup}\{||\Psi(x)||_{\mathcal{L}} : ||x|| \leq 1\} < \infty.
+\end{equation}
+
+An operator $\Psi: H \rightarrow H$ is \textit{compact} if the image of every bounded subset of $H$ is relatively compact. It is well known from the spectral theory of compact operators that if $H$ is a separable Hilbert space then there exist two orthonormal sequences $\{e_n\}$ and $\{f_n\}$ and a real sequence $\{\lambda_j\}$ converging to zero such that
+\begin{align}\label{eq3_2}
+\Psi(x) &= \sum_{i=1}^{\infty} \lambda_j \langle x,e_i \rangle f_i, \text{ } x \in H \nonumber \\
+&= \lim\limits_{m \rightarrow \infty} \sum_{i=1}^{m} \lambda_i \langle x,e_i \rangle f_i, \text{ } x \in H.
+\end{align}
+The $\lambda_i$ may be assumed to be positive because one can replace $f_i$ by $-f_i$ if needed. The existence of representation \eqref{eq3_2} is equivalent to the condition $\Psi$ maps every bounded set into a compact set. Equation~\eqref{eq3_2} is called the \textit{singular value decomposition} of $\Psi$. A compact operator satisfying equation \eqref{eq3_2} with the property that\\ $\sum_{i=i}^{\infty} \lambda_i^2 < \infty$ is said to be a \textit{Hilbert-Schmidt operator}. Consider $\mathcal{S}$ the space of Hilbert-Schmidt operators. $\mathcal{S}$ is said to be a separable Hilbert space with the scalar product if
+\begin{equation}\label{eq_33}
+\langle \Psi_1 , \Psi_2\rangle_{\mathcal{S}} = \sum_{i=1}^{\infty} \langle \Psi_1(e_i) , \Psi_2 (e_i)\rangle
+\end{equation}
+
+where $\{e_i\}$ is an arbitrary orthonormal basis. The value of \eqref{eq_33} does not depend on the chosen orthonormal basis. An operator $\Psi \in \mathcal{L}$ is said to be :
+\begin{itemize}
+\item symmetric if $\langle \Psi(x),y \rangle \text{ }=\text{ }\langle x,\Psi(y)\rangle, \text{ } x,y \in H$,
+\item positive semi-definite if $\langle \Psi(x),x\rangle \text{ }\geq\text{ }0, \text{ } x \in H$
+\end{itemize}
+A symmetric positive semi-definite Hilbert-Schmidt operator $\Psi$ admits the decomposition
+\begin{equation}
+\Psi(x) = \sum_{i=1}^{\infty} \lambda_i \langle x,e_i\rangle e_i, \quad x \in H
+\end{equation}
+with the othonormal set $\{e_i\}$ which are the eigenfunctions of $\Psi$, i.e. $\forall e_i,\text{ } \exists \lambda_i \in \mathbb{K}$ such that $\Psi(e_i) = \lambda_i e_i$. Using the Zorn's Lemma, it can be shown that the set $\{e_i\}$ can be extended to a basis by adding a complete orthonormal system in the orthogonal complement of the subspace spanned by the original $\{e_i\}$.
+\begin{definition}
+Let $H$ be a Hilbert space with inner product $\langle.,.\rangle: H \times H \rightarrow \mathbb{K}$. A linear operator $\Psi: H \rightarrow H$ is called \textit{self-adjoint} if
+\begin{equation}
+\langle \Psi(x), y \rangle = \langle x, \Psi(y) \rangle, \quad \forall x,y \in H.
+\end{equation}
+\end{definition}
+Compact self-adjoint operators on infinite dimensional Hilbert spaces resemble many properties of the symmetric matrices. The spectral decomposition of a compact self-adjoint operator is given by the following:
+\begin{theorem}
+Let $H$ be a Hilbert space and let $\Psi: H \rightarrow H$ be a compact self-adjoint operator. Then, $H$ has an orthonormal basis $\left\{e_i\right\}$ of eigenvectors of $\Psi$ corresponding to eigenvalues $\lambda_i$. In addition, the following points hold:
+\begin{enumerate}
+\item The eigenvalues $\lambda_i$ are real having zero as the only point of accumulation.
+\item The eigenspaces corresponding to distinct eigenvalues are mutually orthogonal.
+\item The eigenspaces corresponding to non-zero eigenvalues are finite dimensional.
+\end{enumerate}
+In the case of a positive compact self-adjoint operator, it is known that the eigenvalues are non-negative. Therefore, the eigenvalues may be ordered as follows
+\begin{equation*}
+\lambda_1 \geq \lambda_2 \geq \dots \geq 0
+\end{equation*}
+
+\end{theorem}
+\clearpage
+
+\section{The Space $L^2$}
+The space $L^2 = L^2 \left(\mathcal{T} \right)$ is the set of measurable real-valued functions $x$ defined on $\mathcal{T} = \left[a,b\right]$ satisfying $\int_{\mathcal{T}} x^2(t) \mathrm{dt} < \infty$. The space $L^2$ is a separable Hilbert space with inner product
+\begin{equation}
+\langle x,y \rangle = \int_{\mathcal{T}} x(t) y(t) \mathrm{dt}.
+\end{equation}
+An important class of operators in $L^2$ are the integral operators defined by
+\begin{equation}\label{KL-1}
+\Psi(x)(t) = \int_{\mathcal{T}} \Psi(t,s)x(s)\mathrm{ds}, \text{ }x \in L^2
+\end{equation}  
+where $\Psi: \mathcal{T} \times \mathcal{T} \rightarrow \mathbb{K}$ is the real kernel. Such operators are Hilbert-Schmidt if and only if
+\begin{equation}
+\iint_{\mathcal{T}} \Psi^2(t,s)\mathrm{dtds} < \infty,
+\end{equation} 
+in which case
+\begin{equation}
+||\Psi||^2_{\mathcal{S}} = \iint_{\mathcal{T}} \Psi^2(t,s)\mathrm{dtds}.
+\end{equation}
+The operator is symmetric if $\Psi(s,t) = \Psi(t,s)$ and positive semi-definite if \\ $ \iint_{\mathcal{T}} \Psi(t,s)x(t)x(s)\mathrm{dtds} \geq 0, \quad \forall x \in L^2$. In this case there is an \textit{orthonormal basis} $\left\{e_i\right\}$ of $L^2\left(\mathcal{T} \right)$ consisting of eigenfunctions of $\Psi$ such that the corresponding sequence of eigenvalues $\left\{\lambda_i\right\}$ is nonnegative. It also follows that $\Psi$ has the representation
+\begin{equation}\label{cov_fpca}
+\Psi(t,s) = \sum_{i=1}^{\infty} \lambda_i e_i(t) e_i(s) \text{ in } L^2 \left(\mathcal{T} \times \mathcal{T} \right)
+\end{equation}
+If $\Psi$ is continuous, the above expansion holds for all $s,t \in \mathcal{T}\right$ and the series converges absolutely and uniformly on $\mathcal{T} \times \mathcal{T}$. This result is known as \textit{Mercer's Theorem}.
+
+\section{Stochastic Processes}
+It is assumed that $\left(\Omega,\mathcal{F},\mathbb{P}\right)$ is a probability space, where $\Omega$ is a sample space, $\mathcal{F}$ is an appropriate $\sigma$-algebra on $\Omega$ and $\mathbb{P}$ is probability measure. A random variable $X$ on $\left(\Omega,\mathcal{F},\mathbb{P}\right)$ is an $\mathcal{F}/\mathcal{B}(\mathbb{R})$-measurable mapping $ \left(\Omega,\mathcal{F},\mathbb{P}\right)$ on $\left(\mathbb{R},\mathcal{B}(\mathbb{R})\right)$, where $\mathcal{B}(\mathbb{R})$ is the \textit{Borel} set on $\mathbb{R}$. The expectation and variance of a random variable $X$ is denoted by,
+\begin{equation*}
+\mathbb{E}\left[X\right] := \int_{\Omega} X(\omega)d\mathbb{P}(\omega),\quad \text{Var}\left[X\right] :=  \mathbb{E}\left[\left(X - \mathbb{E}\left[X\right]\right)^2\right].
+\end{equation*}
+$L^2\left(\Omega,\mathcal{F},\mathbb{P}\right)$ denotes the Hilbert space of real valued square integrable random variables on $\Omega$:
+\begin{equation*}
+L^2\left(\Omega,\mathcal{F},\mathbb{P}\right) = \left\{X: \Omega \rightarrow \mathbb{R}: \int_{\Omega} |X(\omega)|^2 d\mathbb{P}(\omega) < \infty \right\},
+\end{equation*}
+with inner product $\langle X,Y \rangle = \mathbb{E}\left[XY\right] = \int_{\Omega} X Y d\mathbb{P}$ and norm $||X|| = \langle X,X \rangle^{1/2}$.\\
+Let $\mathcal{T} = \left[a,b\right] \subseteq \mathbb{R}$, a stochastic process is a mapping $X: \mathcal{T} \times \Omega \rightarrow \mathbb{R}$, such that $X(t,.)$ is measurable for every $t \in \mathcal{T}$; alternatively a stochastic process is a family of random variables, $X_t : \Omega \rightarrow \mathbb{R}$ with $t \in \mathcal{T}$.\\
+A stochastic process is called centered if $\mathbb{E}\left[X_t\right] = 0$ for all $t \in \mathcal{T}$. Let $\left\{Y_t\right\}_{t \in \mathcal{T}}$ be an arbitrary stochastic process such that
+\begin{equation*}
+Y_t = \mathbb{E}\left[X_t\right] + X_t
+\end{equation*}  
+where $X_t = Y_t - \mathbb{E}\left[X_t\right]$. Without loss of generality, the attention is on centered stochastic processes.
+\begin{definition}
+The autocorrelation function of a stochastic process $\left\{X_t\right\}_{t \in \mathcal{T}}$ is given by $R_X: \mathcal{T} \times \mathcal{T} \rightarrow \mathbb{R}$ such that
+\begin{equation*}
+R_X(s,t) = \mathbb{E}\left[X_s X_t\right], \quad s,t \in \mathcal{T}.
+\end{equation*} 
+\end{definition}
+
+\begin{lemma}
+A stochastic process $\left\{X_t\right\}_{t \in \mathcal{T}}$ is \textit{mean-square continuous} if and only if its autocorrelation function $R_X$ is continuous on $\mathcal{T} \times \mathcal{T}$.
+\end{lemma}
+
+\section{Karhunen-Lo\'{e}ve Expansion}
+It is assumed that $X: \mathcal{T} \times \Omega \rightarrow \mathbb{R}$ is a centered mean-square continuous stochastic process such that $X \in L^2\left(\mathcal{T} \times \Omega\right)$. 
+It has been mentioned in section~\ref{Op_Hilb_Space_1} that a compact positive self-adjoint operator $\Psi: L^2(\mathcal{T}) \rightarrow  L^2(\mathcal{T})$ has a complete set of $\left\{e_i\right\}$ in $ L^2(\mathcal{T})$ and real eigenvalues $\left\{\lambda_i\right\}$ such that:
+\begin{equation}
+\Psi e_i = \lambda_i e_i.
+\end{equation}
+Moreover, since $\Psi$ is positive, the eigenvalues $\lambda_i$ are non-negative. The stochastic process $X$ is assumed to be square integrable on $\mathcal{T} \times \Omega$ and the basis $\left\{e_i\right\}$ of $L^2(\mathcal{T})$ can be used to expand $X_t$ as follows:
+\begin{equation}
+X_t = \sum_{i}^{\infty} x_i e_i(t), \quad x_i = \int_{\mathcal{T}} X_t e_i(t)\mathrm{dt}
+\end{equation}
+The above equation is to be understood in mean square sense. It can be noted that a realization $\hat{X}$ of the stochastic process $X$ admit the expansion
+\begin{equation*}
+\hat{X} = \sum_{i}^{\infty} x_i e_i
+\end{equation*}
+where the convergence is in $L^2\left(\mathcal{T} \times \Omega \right)$. The above results lead to the \textit{Karhunen-Lo\'{e}ve} Theorem.
+\begin{theorem}[Karhunen-Lo\'{e}ve]\label{kl_expansion}
+Let $X: \mathcal{T} \times \Omega \rightarrow \mathbb{R}$ be a centered mean-square continuous stochastic process with $X \in L^2\left(\mathcal{T} \times \Omega\right)$. There exist a basis $\left\{e_i\right\}$ of $L^2\left(\mathcal{T} \right)$ such that for all $t \in \mathcal{T}$,
+\begin{equation}
+X_t = \sum_{i=1}^{\infty} x_i e_i(t), \text{ } \forall t \in \mathcal{T}
+\end{equation}
+where the coefficients $x_i$ are given by $x_i(\omega) = \int_{\mathcal{T}} X_t(\omega) e_i(t) \mathrm{dt}$ and satistfy the following points:
+\begin{enumerate}
+\item $\mathbb{E}\left[x_i\right] = 0,\text{ }\forall i \in \mathbb{N}$;
+\item $\mathbb{E}\left[x_i x_j\right] = \delta_{ij} \lambda_j, \text{ }\forall i,j \in \mathbb{N}$;
+\item $\text{Var}\left[x_j\right] = \lambda_i,\text{ }\forall i \in \mathbb{N}$,
+\end{enumerate}
+with $\delta_{ij} =
+     \begin{cases}
+             1, &         \text{if } i=j,\\
+             0, &         \text{if } i\neq j.
+     \end{cases}$
+\end{theorem}
+
+An important point is that since the random coefficient $x_j$ of the \textit{Karhunen-Lo\'{e}ve} Expansion are uncorrelated, the variance of $X_t$ is simply the sum of the variances of the individual eigenvalues (under the assumptions of the Beppo-Levi monotone convergence theorem):
+\begin{align}
+\text{Var}\left[X_t\right] &= \text{Var}\left[\sum_{i=1}^{\infty} x_i e_i(t)\right] \nonumber \\
+&= \sum_{i=1}^{\infty} e^2_i(t) \text{Var}\left[x_i\right] \nonumber \\
+&= \sum_{i=1}^{\infty} \lambda_i e^2_i(t) \nonumber.
+\end{align}
+Integrating the above result over $\mathcal{T}$ and using the orthonormality of $\left\{e_i\right\}$, the total variance of the process is:
+\begin{equation}
+\int_{D} \text{Var}\left[X_t\right] \mathrm{dt} = \sum_{i=1}^{\infty} \lambda_i.
+\end{equation}
+In particular, the total variance of the $N$-truncated approximation which is $\sum_{i=1}^{K} \lambda_i$ explains $\dfrac{\sum_{i=1}^{K} \lambda_i}{\sum_{i=1}^{\infty} \lambda_i}$ of the total variance of the stochastic process $X_t$. The optimal number of eigenfunctions is the smallest value $K \in \mathbb{N}$ such that $\dfrac{\sum_{i=1}^{K} \lambda_i}{\sum_{i=1}^{\infty} \lambda_i} \geq \alpha$, where $0 \leq \alpha \leq 1$.
+
+%\section{Functional Principal Component Analysis (FPCA)}
+
+%\subsection{Principal Component Analysis}
+%Introduced by and independently by, principal component analysis (PCA) is an optimal representation of data according to some algebraic criteria. The main aim of PCA to find the sequence of orthogonal components that most efficiently explains the variance of the observations, while preserving the maximum amount of information from the original variables. Many authors have realized the computation of PCA leads to an impass when analyzing functional data simply because of data sparsity in high-dimensional space.\\[1em]
+%Before reviewing \textit{functional principal component analysis}, it is important to revisit the Mathematics of \textit{principal components analysis} which is mainly used as a tool for dimension reduction.\\
+%Consider $p$-dimensional vectors that are projected onto a $q$-dimensional subspace. The summary will be the projections of the original vectors onto the $q$-dimensional subspace spanned by the $q$ vectors or the \textit{principal components}. The principal components are derived by finding the projections which maximize the variance. The first principal component is the vector along which projections have the largest variance. The second principal component is the vector which maximizes variance among all vectors othogonal to the first. Subsequently, the $k^{th}$ component is the variance-maximizing vector orthogonal to the previous $k-1$ components. There are $p$ principal components in all.
+%\\[1em]
+%Let $\mathbf{Y}_{n \times p}$ be an arbitrary data matrix that has been centered, so that every variable has mean $\mathbf{0}$. Hence, $\mathbf{X}^{T}\mathbf{X}=n\bm{\Sigma}$ where $\bm{\Sigma}$ is the covariance matrix of the data. A unit $p$-vector can be specified, $\mathbf{w}$, which is defined as the weight (or \textit{loading}). The projection of the data $\mathbf{x}_{i}$ (row vector) onto the line with directional vector $\mathbf{w}$ is given by the scalar $\mathbf{x}_{i}.\mathbf{w}$. The actual coordinate in the $p$-dimensional space $(\mathbf{x}_{i}.\mathbf{w})\mathbf{w}$. Note that the mean of the projections will be zero since $\mathbf{X}$ is centered. By trying compute the difference between the projected vectors and the original vectors, the result is:
+%\begin{align*}\label{proj}
+%\lVert \mathbf{x}_{i}-(\mathbf{x}_{i}.\mathbf{w})\mathbf{w}\rVert^{2}&=\lVert\mathbf{x}_{i}\rVert^{2}-2(\mathbf{x}_{i}.\mathbf{w})^{2}+(\mathbf{x}_{i}.\mathbf{w})^{2}\mathbf{w}.\mathbf{w} \nonumber \\
+%            &=\lVert\mathbf{x}_{i}\rVert^{2}-(\mathbf{x}_{i}.\mathbf{w})^{2} \nonumber \\
+%\end{align*}
+%since $\mathbf{w}$ is a unit vector. Summing those residuals across all the vectors:
+%
+%\begin{equation*}
+%MSE(\mathbf{w})=\frac{1}{n}\left(\sum\limits_{i=1}^{n}\lVert\mathbf{x}_{i}\rVert-\sum\limits_{i=1}^{n}(\mathbf{x}_{i}.\mathbf{w})^{2}\right)
+%\end{equation*}
+%
+%Minimizing the MSE means that we must maximize the second summation which we can see is the sample mean of $(\mathbf{x}_{i}.\mathbf{w})^{2}$. Using the definition of the variance, the result is:
+% \begin{align*}
+% \sigma_{\mathbf{w}}^{2}&=\frac{1}{n}\sum\limits_{i=1}^{n}(\mathbf{x}_{i}.\mathbf{w})^{2}-\left(\underbrace{\frac{1}{n}\sum\limits_{i=1}^{n}\mathbf{x}_{i}.\mathbf{w}}_{0}\right)^{2} \\
+%                     &=\frac{1}{n}\sum\limits_{i=1}^{n}(\mathbf{x}_{i}.\mathbf{w})^{2} \nonumber \\
+% \end{align*}
+% 
+% The objective is to choose a unit vector $\mathbf{w}$ to maximize $\sigma_{\mathbf{w}}^{2}$. In matrix form, the variance can be written as:
+% 
+% \begin{align*}
+%  \sigma_{\mathbf{w}}^{2}&=\frac{1}{n}\sum\limits_{i=1}^{n}(\mathbf{x}_{i}.\mathbf{w})^{2} \\
+%                      &=\frac{1}{n}(\mathbf{Xw})^{T}(\mathbf{Xw}) \nonumber \\
+%                      &=\frac{1}{n}\mathbf{w}^{T}\mathbf{X}^{T}\mathbf{X}\mathbf{w} \\
+%                      &=\mathbf{w}^{T}\frac{\mathbf{X}^{T}\mathbf{X}}{n}\mathbf{w} \\
+%                      &=\mathbf{w}^{T}\bm{\Sigma}\mathbf{w} \\
+%  \end{align*}
+%To maximize $\sigma_{\mathbf{w}}^{2}$ it is important to ensure that only the unit vector are used, in other words putting a constraint on the maximization (i.e. $\mathbf{w}^{T}\mathbf{w}=1$). Using the \textit{Lagrange multiplier}, for some $\lambda$, the result is:
+%  
+%   \begin{align}
+%    \mathcal{L}(\mathbf{w},\lambda)&=\sigma_{\mathbf{w}}^{2}-\lambda(\mathbf{w^{T}w}-1)\nonumber \\
+%                   \dfrac{\partial \mathcal{L}}{\partial \lambda} &=\mathbf{w^{T}w}-1 \label{lagrange1} \\
+%                   \dfrac{\partial \mathcal{L}}{\partial \mathbf{w}} &=2\bm{\Sigma w}-2\lambda\mathbf{w}\label{lagrange2}
+%    \end{align}
+%    
+%Setting \eqref{lagrange1} \& \eqref{lagrange2} to zero at the maximum, we obtain:
+%
+%\begin{align}
+%                    \mathbf{w^{T}w} &= 1 \label{lagrange3}\\
+%                  \bm{\Sigma}\mathbf{w} &= \lambda\mathbf{w} \label{lagrange4}
+%\end{align}
+%    
+%Equations \eqref{lagrange3} \& \eqref{lagrange4} show that $\mathbf{w}$ is an \textit{eigenvector} of the covariance matrix $\bm{\Sigma}$ and the maximizing vector will be the one associated with the largest \textit{eigenvalue} $\lambda$. $\bm{\Sigma}$ is a $p\times p$ matrix, so it will have \textit{p} different eigenvectors. Also, $\bm{\Sigma}$ being symmetric and positive-definite implies that, the eigenvectors must be orthogonal to one another and the eigenvalues must all be nonnegative. The eigenvectors of $\bm{\Sigma}$ are the \textit{principal components} of the data and their components are called the \textit{loadings} or \textit{weights}.
+
+%\subsection{PCA for functional data}
+%The main idea of FPCA is merely to replace vectors by functions, matrices by compact linear operators, covariance matrices by covariance operators, and scalar products in vector space by scalar products in square-integrable function space .
+%
+%Suppose that there is a set of $N$ curves $X_{i}(s), \text{ } \forall s \in \mathcal{T}$. As defined in \eqref{covar}, the sample covariance function of the observed data is $\hat{\Gamma}(s,t)$. In FDA framework, \eqref{lagrange4} becomes:
+%
+%\begin{equation}\label{fda-eigen}
+%\int_{\mathcal{T}}\hat{\Gamma}(s,t)\xi(t)dt = \lambda\xi(s),
+%\end{equation}
+%
+%the latter equation is commonly referred to as the \textit{Fredholm functional eigenequation}. The left side of equation \eqref{fda-eigen} is an \textit{integral transform} $V$ of the weight function $\xi$ defined by
+%
+%\begin{equation*}
+%V\xi=\int_{\mathcal{T}}\hat{\Gamma}(.,t)\xi(t)dt
+%\end{equation*}
+%
+%which is called the \textit{covariance operator V}. Therefore we may also express the eigenfunction directly as
+%
+%\begin{equation}
+%V\xi = \lambda\xi,
+%\end{equation}
+%where $\xi$ is the eigenfunction and $\lambda$ is the corresponding eigenvalue. Obviously, the functional principal component curves that we get are typically not smooth. In order to improve the smoothness of the eigenfunctions, we impose the roughness penalty on the functional principal component weight functions. The balance between the goodness-of-fit and the roughness of the function is controlled by a smoothing parameter $\mu$. The smoothed eigenfunctions can be obtained by solving:
+%\begin{equation}\label{sfpca}
+%\int_{\mathcal{T}}\hat{\Gamma}(s,t)\xi(t)dt = \lambda\left[\xi(s)+\mu\times \text{PEN}_{m}(\xi)\right],
+%\end{equation}
+%where $PEN_{m}(\xi)$ is the integrated squared $m^{th}$ derivative of $\xi(t)$ as defined in section~\ref{model_est}.
+%
+%\section{Empirical Orthonormal Basis Functions (EOF)}
+%
+%In practice, we compute the eigenfunctions by converting the continuous functional eigenanalysis problem to an approximately equivalent matrix eigenanalysis task. The strategies consist of either \textbf{discretizing the functions} or \textbf{using basis function expansion}.
+%
+%\subsection{Discretizing the functions}
+%First used by and , the idea with this method is to discretize the observed functions $X_{i}(s)$ to a fine grid of $n$ equally spaced values $\upsilon_{j}$ that span the interval $\mathcal{T}$. This results in to an equation similar to \eqref{lagrange4}. This method will not be explored further in this dissertation.
+%
+%\subsection{Basis function expansion of the functions}
+%This method consists in expressing the functional principal components, as well as the functional data, as linear combinations of known basis functions. The number of basis functions used depends on many considerations such as: the number of discrete sampling points from the original data; the level of smoothing imposed; and so forth.
+%\\[1em]
+%Let suppose that each $X_{i}(s),\text{ }i=1,\dots,N \text{ }(\forall s \in \mathcal{T})$, is written as a linear combination of $K$ basis functions $\phi_{k}(s),\text{ }k=1,\dots,K\text{ }(\forall s \in \mathcal{T})$. We may then express the simultaneous expansion of all $N$ curves as:
+%
+%\begin{equation*}
+%   \mathbf{X}(s) = \mathbf{C}\bm{\phi}(s), \text{ } \forall s \in \mathcal{T}
+%\end{equation*}
+%
+%where the coefficient matrix $\mathbf{C}$ is a $N \times K$ matrix and $\bm{\phi}(s)$ is a $K \times 1$ vector of basis functions.
+%\\[1em]
+%The covariance function can then be rewritten as:
+%\begin{equation}
+%\hat{\Gamma}(s,t)=N^{-1}\bm{\phi}'(s)\mathbf{C}' \mathbf{C}\bm{\phi}(t),\text{ } \forall t,s \in \mathcal{T}.
+%\end{equation}
+%Let suppose that an eigenfunction $\xi$ has an expansion:
+%\begin{equation}
+%\xi(s)=\sum\limits_{k=1}^{K}b_{k}\phi_{k}(s)
+%\end{equation}
+%or, in matrix notation $\xi(s)=\bm{\phi}(s)'\mathbf{b}$. Then the left side of equation \eqref{fda-eigen} yields
+%\begin{align*}
+%\int_{\mathcal{T}}\hat{\Gamma}(s,t)\xi(t)\mathrm{dt} &= \int_{\mathcal{T}} N^{-1}\bm{\phi}(s)'\mathbf{C}'\mathbf{C}\bm{\phi}(t)\bm{\phi}(t)'\mathbf{b}\mathrm{dt} \\
+%          &=N^{-1}\bm{\phi}(s)'\mathbf{C}'\mathbf{C}\left[\int_{\mathcal{T}}\bm{\phi}(t)\bm{\phi}(t)'\mathrm{dt}\right]\mathbf{b} \\
+%          &=N^{-1}\bm{\phi}(s)'\mathbf{C}'\mathbf{C}\mathbf{P}\mathbf{b},
+%\end{align*}
+%where $\mathbf{P}=\int \bm{\phi}(t)\bm{\phi}'(t) \mathrm{dt}$ is defined to be a $K \times K$ symmetric matrix. Therefore the eigenequation \eqref{fda-eigen} can be expressed as
+%
+%\begin{equation*}
+%N^{-1}\bm{\phi}(s)'\mathbf{C}'\mathbf{C}\mathbf{P}\mathbf{b}=\rho \bm{\phi}(s)'\mathbf{b}.
+%\end{equation*}
+%
+%Since this equation must hold for all $s$, then
+%
+%\begin{equation}\label{eigenanalysis}
+%N^{-1}\mathbf{C}'\mathbf{C}\mathbf{P}\mathbf{b}=\lambda \mathbf{b}.
+%\end{equation}
+%
+%Note that $\int \xi^{2}(s)ds=\mathbf{b}'\mathbf{Pb}=1$. Similarly, two functions $\xi_{1}(s)$ and $\xi_{2}(s)$ are orthogonal which implies $\mathbf{b}_{1}'\mathbf{P}\mathbf{b}_{2}=0$. 
+%\\[1em]
+%Let's define $\mathbf{u}=\mathbf{P}^{1/2}\mathbf{b}$ plug it into equation \eqref{eigenanalysis}, we then get:
+%
+%\begin{equation}\label{f-eigenanalysis}
+%N^{-1}\mathbf{P}^{1/2}\mathbf{C}'\mathbf{C}\mathbf{P}^{1/2}\mathbf{u}=\lambda\mathbf{u}.
+%\end{equation}
+%
+%At this stage, computing the functional principal components implies:
+%\vspace{-0.2cm}
+%\begin{itemize}
+%\item computing the $m$ eigenvectors ($u_{1},\dots,u_{K}$) and the $K$ eigenvalues ($\lambda_{1},\dots,\lambda_{K}$) of $\mathbf{Q}=N^{-1}\mathbf{P}^{1/2}\mathbf{C}'\mathbf{C}\mathbf{P}^{1/2}$.
+%\item computing the $K$ functional principal components (FPC) $\xi_{i}(s)=\bm{\phi}'(s)\mathbf{b}$
+%\item computing the contribution of each FPC to the variation of the data
+%\item assessing the location of each $X_{i}(s)$ in the FPC basis by computing $\mathbf{F}=X\xi=\mathbf{CPB}$. Using the fact that $\mathbf{U}=\mathbf{P}^{1/2}\mathbf{B}$, we get $\mathbf{F}=\mathbf{C}\mathbf{P}^{1/2}\mathbf{U}$ where $\mathbf{U}=\left[u_{1},\dots,u_{K}\right]$ and $\mathbf{B}=\left[b_{1},\dots,b_{K}\right]$.
+%\item computing the scores of $x_{i}(s)$ in the FPC system as the $i$-th row of $\mathbf{F}$. The scalar $f_{ij}$ is the score of $x_{i}(s)$ relative to the $j$-th row  of $\mathbf{F}$.
+%\end{itemize}
+%
+%\subsubsection*{Numerical Example: Computations of smooth FPC on Canadian Weather}
+%
+%Let's consider the \texttt{Aemet} dataset mentioned in section \ref{intro}. The objective is to compute the weight functions after the mean across all 73 weather stations has been removed from each station's monthly temperature record. One expects temperature to be, almost surely, periodic data. Therefore, a suitable basis function for the dataset will be Fourier basis where $X(s)=\left[X_{1}(s),\dots,X_{35}(s)\right]^{T}$ is as a linear combination of $\bm{\phi}(s)_{11\times 1}=\left[\frac{1}{\sqrt{12}},\frac{\sin(\pi s/6)}{\sqrt{6}},\frac{\cos(\pi s/6)}{\sqrt{6}},\dots,\frac{\sin(2\pi s)}{\sqrt{6}},\frac{\cos(2\pi s)}{\sqrt{6}}\right]^{T}$ functions with $s \in \{1,\dots,12\}$, see equation \eqref{fouriereq}. Centering the functional data can be done as follows:
+%
+%\begin{equation*}
+%X^{*}_{i}(s)=X_{i}(s)-\dfrac{1}{73}\sum\limits_{i}X_{i}(s), \forall s \in \{1,\dots,12\}.
+%\end{equation*}
+%
+%The coefficient matrix is found by using a least square approach, namely $\hat{\mathbf{C}}=\left(\mathbf{\Phi'\Phi}\right)^{-1}\mathbf{\Phi'Y}$ with $\hat{\mathbf{C}}=(C_{ij})_{73\times 11}$. We can express the variance-covariance function as
+%\begin{equation*}
+%\hat{\Gamma}(s,t)=\dfrac{1}{73}\bm{\phi}(s)^{T}\mathbf{C'C}\bm{\phi}(t)
+%\end{equation*}
+%Note that, by using a least square approach for the $\mathbf{C}$-matrix the functional temperatures are not smooth leading to variability in the estimated functional principal component curves. Using equation \eqref{sfpca}, the following equation is obtained:
+%\begin{equation*}
+%\hat{\Gamma}(s,t)\xi(t) = \rho\left[\xi(s)+\mu\times \text{PEN}_{2}(\xi)\right],
+%\end{equation*}
+%with the eigenfunction $\xi(t)=\bm{\phi}(t)^{T}\mathbf{b}$.
+%A very interesting detail that can be exploited here is the fact that our basis is orthonormal and the functions are $\cos$ and $\sin$. .Hence:
+%\begin{align*}
+%\text{PEN}_{2}(\xi)&=\int\limits_{\mathcal{T}}D^{2}\bm{\phi}(t)D^{2}\bm{\phi}'(t)\mathrm{dt}\\
+%				   &=\int\limits_{\mathcal{T}}\left(-\omega^{2}\bm{\phi}(t)\right)\left(-\omega^{2}\bm{\phi}'(t)\right)\mathrm{dt}\\
+%				   &=\omega^{4}\int\limits_{\mathcal{T}}\left(\bm{\phi}(t)\right)\left(\bm{\phi}'(t)\right)\mathrm{dt}\\
+%				   &=S_{0}\mathbf{I}\text{ }(\text{because}\text{ }\bm{\phi}(t)\text{ is an orthonormal basis})\\
+%\end{align*}
+%where $S_{0}=\text{diag}(w_{1}^{4},\dots,w_{11}^{4})$ and $\{w_{k}\}$ the $k$-th constant term derived from the $4^{th}$ derivative of the function $\phi_{k}(t)$. Let's consider a matrix $S_{11\times 11}$ defined as $S=\text{diag}((1+\mu w_{1}^{4})^{-1/2},\dots,(1+\mu w_{11}^{4})^{-1/2})$, we have
+%\begin{equation*}
+%\xi(t)+\mu D^{4}\xi(t)=\bm{\phi}(t)^{T}S^{-2}\mathbf{b}.
+%\end{equation*}
+%The eigenequation \eqref{sfpca} may be written as follows:
+%\begin{equation*}
+%\frac{1}{35}\mathbf{C}^{T}\mathbf{C}\mathbf{b}=\rho S^{-2}\mathbf{b}
+%\end{equation*}
+%Taking the simplification one step further gives us:
+%\begin{equation*}
+%S\left(\frac{1}{35}\mathbf{C}^{T}\mathbf{C}\right)S\mathbf{u}=\rho \mathbf{u}
+%\end{equation*}
+%where $\mathbf{b}=S\mathbf{u}$ and $\xi(t)=\Phi(t)^{T}\mathbf{b}$
+
+\section{Closing Comments}
+This Chapter introduced some key results from Functional Analysis and more specifically results related to Hilbert Space and $L^2$ Space, and established the \textit{Karhunen-Lo\'{e}ve} Theorem. The \textit{Karhunen-Lo\'{e}ve} Theorem, also known as the \textit{Kosambi-Karhunen-Lo\'{e}ve} Theorem explained the reason why any stochastic process can be represented as an infinite linear combination of eigenfunctions which are elements of the $L^2$ Space on a bounded interval. Interested readers can consult \cite{Gohberg1990} for further indications on the topic. Furthermore, the infinite linear combination of eigenfunctions can be written as a finite sum of basis functions. In most cases, Statisticians replace the eigenfunctions and eigenvalues by basis functions $\phi_k(t)$ and coefficients $c_k$ $\forall k = 1,2,\dots,K$ (respectively) as seen in equation~\eqref{fda_21}.\\
+Now that the foundations and tools of Functional Data Analysis have been established, the next Chapter will introduce Functional Linear Regression Modeling which is an extension of Multivariate Regression Modeling.

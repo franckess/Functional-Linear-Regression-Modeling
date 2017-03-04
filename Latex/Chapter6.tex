@@ -1,0 +1,46 @@
+% Chapter Template
+
+\chapter{Conclusion} % Main chapter title
+
+\label{Chapter6} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{Chapter6}
+
+\lhead{Chapter 6. \emph{Conclusion}} % Change X to a consecutive number; this is for the header on each page - perhaps a shortened title
+
+%----------------------------------------------------------------------------------------
+%	SECTION 1
+%----------------------------------------------------------------------------------------
+
+
+This Chapter will summarize the results of the research and its applications  subject to the dissertation. The Chapter will begin with a discussion of the objectives mentioned in Chapter~\ref{Chapter1} in a concluding manner. An overview and a brief summary of the illustrations implemented in Chapter~\ref{Chapter5} are done. Some comments will be made on the hardware specifications used to run the scripts as well as their limitations in performing the analysis. Finally, some recommendations will be made to those interested in future research regarding Functional Linear Regression Modeling.
+
+
+%-----------------------------------
+%	SUBSECTION 1
+%-----------------------------------
+\section{Concluding Remarks about Objectives}
+Below each of the objectives stated in Chapter~\ref{Chapter1} is discussed.
+\begin{itemize}
+\item The first objective stated in Chapter~\ref{Chapter1} was to define Functional Data Analysis and introduce important basis functions that were used throughout the dissertation. Chapter~\ref{Chapter2} offered an in-depth explanation of the different basis expansions used in FDA and provided a visualization aspect to them. The emphasis was on the revelant techniques and methods in this dissertation, namely: \textit{Gaussian}, \textit{Fourier} and \textit{B-Splines}.
+\item Chapter~\ref{Chapter2} provided an in-depth understanding of four different model criteria (i.e. \textit{Generalized Cross-Validation}, \textit{Generalized Information Criterion}, \textit{modified Akaike Information Criterion} and \textit{Generalized Bayesian Information Criterion}) as well their computations in \texttt{R} through examples, in the FDA context. Chapter~\ref{Chapter4} and Chapter~\ref{Chapter5} provided the insight of the aforementioned model criteria in the FLRM context. Appendix~\ref{AppendixA} was fully dedicated in the implementation of the most recurrent steps done when converting discrete observed data to a functional process. 
+\item Chapter~\ref{Chapter3} main objective was to provide the mathematical foundations to have a better understanding of the link between Functional Analysis and Functional Data Analysis. Key definitions and theorems were given in order to equip the readers with the relevant background to understand the meaning of the \textit{Kahrunen-Loeve} Theorem.
+\item In Chapter~\ref{Chapter4}, the Functional Linear Regression was introduced. All the different model estimation methods with a deeper attention on the \textit{Penalized Maximum Likelihood} estimate. The derivations of the maximum likelihood estimators, in every case, were computed. The model criteria in the FLRM context were defined and derived accordingly, see Appendix~\ref{AppendixB} for the proofs.
+\item Chapter~\ref{Chapter5} provided an application of FLRM using the \texttt{Aemet} data. The \textit{Gaussian Basis}, \textit{Fourier Basis} and \textit{B-Splines Basis} were used to smooth the discretized observed data of Temperature, Wind Speed and Log-Precipitation for all 73 stations. For each basis, the four model criteria were used to compute the optimal model parameters. Once the functional data of Log-Precipitation were obtained, the Functional Linear Regression was implemented to predict the functional data of Log-Precipitation (see Figures \ref{fig:logprec_Gauss}, \ref{fig:logprec_fourier} and \ref{fig:logprec_bsplines}). The AMSE was computed to compare the different basis functions. Based on the results, it appeared that the \textit{Gaussian Basis} outperformed all the other basis functions.
+\end{itemize}
+
+%-----------------------------------
+%	SUBSECTION 2
+%-----------------------------------
+
+\section{Limitations}
+One of the major issues with performing an analysis in Functional Linear Regression Modeling is the time taken to compute the functional variables. It is clear that when the number of data points $J$ is very large, computing an expansion in $\mathcal{O}(J)$ operations is critical. Additionally, when the operations are performed over a number of sets of observed data (e.g. weather stations) then the computation takes even more time to be completed. Another computationally intensive process is the implementation of model criteria. \textit{Generalized Cross-Validation}, for instance, is known to be computationally intensive and therefore requires a lot of space in memory. This is a particular issue when running codes using the Programming Language \texttt{R}. A typical error message displayed when trying to compute matrix operations would be: \texttt{Error: cannot allocate vector of size 78.1 Gb}.\\
+For this dissertation, the only focus was on Regression in Functional Data Analysis. The functional behaviour of the Log-Precipitation was predicted assuming the functional behaviours of Temperature and Wind Speed were known. This particularity of the \texttt{Aemet} data and of weather data in general is difficult to find. In other words, the availability of datasets that have similar features as the weather data is not given. Even when the dataset is available, the discretized observed points are sparse which makes the analysis in functional context strenuous.
+
+
+%----------------------------------------------------------------------------------------
+%	SECTION 2
+%----------------------------------------------------------------------------------------
+
+\section{Recommendations}
+As already mentioned, the analysis of Functional Linear Regression was done using the \texttt{Aemet} weather data only. More datasets with similar intrisic features as the weather data from other fields of research should be investigated to involve more scientists in Functional Data Analysis. The \texttt{R}-package \texttt{fda} by \cite{Ramsay2009FDA} has been around for a long time and is the most popular package for FDA. Unfortunately, the package is a bit restricted with other kinds of analysis involving: other types of basis functions (e.g. \textit{Gaussian Basis}); other types of model evaluations methods (e.g. \textit{Penalized Maxmum Likelihood} method) and other types model criteria (e.g. GIC, mAIC, GBIC). More packages must be released in that regard.\\
+When it comes to Functional Linear Regression models, one of the main assumption is that the chosen basis function is the one that smooth the predictor and covariates. Which is not always a correct assumption because different variables exhibit different stochastic paths. One of the challenges with violating that assumption is the computation of the matrices $\bm{J}_{\phi \psi}$ where $\bm{\phi}(t)$ could be a \textit{Fourier Basis} function and $\bm{\psi}(t)$\textit{Gaussian Basis} function.\\
+Thus there is still vast unexplored area of research in the field of Functional Data Analysis in general and specifically for Functional Regression Modeling. This dissertation provides a first step in that direction.
