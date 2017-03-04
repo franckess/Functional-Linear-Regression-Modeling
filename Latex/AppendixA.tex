@@ -1,0 +1,334 @@
+% Appendix A
+
+\chapter{\texttt{R}-Functions} % Main appendix title
+
+\label{AppendixA} % For referencing this appendix elsewhere, use \ref{AppendixA}
+
+\lhead{Appendix A. \emph{\texttt{R}-Functions}} % This is for the header on each page - perhaps a shortened title
+
+In order to make some of the \texttt{R}-codes readable, most of the repeated operations have been wrapped up into functions that are used throughout the dissertation.
+\section{Matrices of Basis Functions and Model Selection}
+  \\
+  \\[1ex]
+  \mbox{
+    \begin{tabular}{ c c c c}
+    \hline \\[-0.75ex]
+    \hspace{1cm} \texttt{Gaussian\_bsplines} &  \hspace{.5cm} \textit{Gaussian Basis} functions with \textit{B-Splines} & & \\
+    \\[-0.75ex] 
+    \hline\\[-5ex]
+    \end{tabular}%
+  }
+\subsection*{Description}
+This function is used to compute a matrix of \textit{Gaussian Basis} functions with \textit{B-Splines}. Its arguments are:
+\begin{itemize}
+\item \texttt{tt} being the vector of values $\left\lbrace t_{1},\dots,t_{J} \right\rbrace \in \mathcal{T}$;
+\item \texttt{m} represents the number of basis functions applied to the function.
+\end{itemize}
+
+\subsection*{\texttt{R}-Code}
+\begin{lstlisting}
+  Gaussian_bsplines = function(tt,m){
+    
+    range <- diff(range(tt))
+    kn <- seq(min(tt) - (range/(m-3))*3, max(tt) + (range/(m-3))*3, by = range/(m-3))
+    myu <- kn[3:(m+2)]
+    h <- diff(kn,lag = 2)/3
+    
+    B <- matrix(0,length(tt),(m))
+    for (j in 1:m){
+      B[,j] <- exp(-0.5*(tt-myu[j])^2/(h[1]^2))
+    }
+    return(B)
+  }
+ \end{lstlisting}
+\vspace{0.5cm}
+  \mbox{
+    \begin{tabular}{ c c c c}
+    \hline \\[-0.75ex]
+    \hspace{.5cm} \texttt{Gaussian\_kmeans} &  \hspace{1cm} \textit{Gaussian Basis} functions with \texttt{K-Means} & & \\
+    \\[-0.75ex] 
+    \hline\\[-1ex]
+    \end{tabular}%
+  }
+  \subsection*{Description}
+  This function is used to compute a matrix of \textit{Gaussian Basis} functions using \textit{K-means}. Its arugments are:
+ \begin{itemize}
+ \item \texttt{tt} is used to specify the vector of values $\left\lbrace t_{1},\dots,t_{J} \right\rbrace \in \mathcal{T}$;
+ \item \texttt{m} is used to specify the number of basis functions applied to the function;
+ \item \texttt{nyu} is used to specify the hyperparameter.
+ \end{itemize} The clustering method used is the one developed by \cite{Hartigan1979}. 
+ \subsection*{\texttt{R}-Code}
+ \begin{lstlisting}
+  Gaussian_kmeans = function(tt,m,nyu){
+     
+    k <- kmeans(tt, centers = m,algorithm = "Hartigan-Wong")
+    myu <- as.vector(k$centers)
+    h <- k$withinss/k$size    
+     
+    B <- matrix(0,length(tt),(m))
+    for (j in 1:m){
+      B[,j] <- exp(-0.5*(tt-myu[j])^2/(h[j]*nyu))
+    }
+    return(B)
+  }
+  \end{lstlisting}
+\clearpage
+\\
+ \\
+ \\[3ex]
+ \mbox{
+   \begin{tabular}{ c c c c}
+   \hline \\[-0.75ex]
+   \hspace{1cm} \texttt{Bsplines\_FDA} &  \hspace{1cm} \textit{B-Splines Basis} functions & \hspace{1cm} & \hspace{1.5cm} \\
+   \\[-0.75ex] 
+   \hline\\[-4ex]
+   \end{tabular}%
+ }
+\subsection*{Description}
+This function is used to generate a matrix of \textit{B-Splines Basis} functions. It uses the \texttt{R}-package \texttt{fda}. Its arguments are:
+\begin{itemize}
+\item \texttt{tt} is used to specify the vector of values $\left\lbrace t_{1},\dots,t_{J} \right\rbrace \in \mathcal{T}$;
+\item \texttt{m} is used to specify the number of basis functions applied to the function.
+\item \texttt{norder} is used to specify the order of the \textit{B-Splines}
+\end{itemize}
+\subsection*{\texttt{R}-Code}
+\begin{lstlisting}
+Bsplines_FDA <- function(tt,m,norder=4){
+  require(fda)
+  basis = create.bspline.basis(rangeval = range(tt),nbasis = m,norder)
+  B <- eval.basis(evalarg = tt,basisobj = basis)
+  return(B)
+} 
+\end{lstlisting} 
+\vspace{0.5cm}
+ \mbox{
+   \begin{tabular}{ c c c c}
+   \hline \\[-0.75ex]
+   \hspace{1cm} \texttt{Fourier\_FDA} &  \hspace{1cm} \textit{Fourier Basis} functions & \hspace{2cm} & \hspace{1.5cm} \\
+   \\[-0.75ex] 
+   \hline\\[-2ex]
+   \end{tabular}%
+ }
+\subsection*{Description}
+This function is used to generate a matrix of \textit{Fourier Basis} functions. It uses the \texttt{R}-package \texttt{fda}. Its arguments are:
+\begin{itemize}
+\item \texttt{tt} is used to specify the vector of values $\left\lbrace t_{1},\dots,t_{J} \right\rbrace \in \mathcal{T}$;
+\item \texttt{m} is used to specify the number of basis functions applied to the function.
+\end{itemize}
+\clearpage
+\subsection*{\texttt{R}-Code}
+\begin{lstlisting}
+Fourier_FDA <- function(tt,m){
+  require(fda)
+  if((m %% 2)==0) {m <- m + 1} else {m <- m}
+  basis = create.fourier.basis(rangeval = range(tt),nbasis = m)
+  B <- eval.basis(evalarg = tt,basisobj = basis)
+  return(B)
+}
+\end{lstlisting}
+\vspace{0.5cm}
+\mbox{
+   \begin{tabular}{ c c c c}
+   \hline \\[-0.75ex]
+   \hspace{.5cm} \texttt{\texttt{Pen\_Max\_Likelihood}} &  \hspace{1cm} \textit{Penalized Maximum Likelihood} estimate &\hspace{-0.5cm} & \\
+   \\[-0.75ex] 
+   \hline\\[-2ex]
+   \end{tabular}%
+}
+\subsection*{Description}
+This function is used to compute the \textit{Penalized Maximum Likelihood} estimate. Its arguments are:
+\begin{itemize}
+\item \texttt{B} is used to specify the matrix of basis functions;
+\item \texttt{n} is used to specify the number of basis functions;
+\item \texttt{lambda} is used to specify log${}_{10}(\lambda)$;
+\item \texttt{y} is used for the vector of observed values.
+\end{itemize}
+\subsection*{\texttt{R}-Code}
+\begin{lstlisting}
+Pen_Max_Likelihood <- function(B, n, lambda, y){
+  D <- matrix(0,(n-2),n)
+  D[1, ] <- c(1,-2,1,rep(0,(n-3)))
+  for (i in 1:(n-4)) {
+    D[(i+1), ] <- c(rep(0,i),1,-2,1,rep(0,(n-3)-i))
+  }
+  D[(n-2), ] <- c(rep(0,(n-3)),1,-2,1)
+  K <- t(D)%*%D
+  
+  lamda <- 10^(lambda)
+  sigma <- 2
+  sigma1 <- 1
+  
+  while((sigma-sigma1)^2 > 1e-7){
+    Binv <- solve(t(B)%*%B+ncol(train.temp)*(lamda)*(sigma)*K,diag(ncol(K)))
+    w <- (Binv)%*%t(B)%*%y[1,]
+    sigma1 <- sigma
+    sigma1 <- as.vector(sigma1)
+    sigma <- (1/ncol(train.temp))*t(y[1,]-B%*%w)%*%(y[1,]-B%*%w)
+    sigma <- as.vector(sigma)       
+  }
+  list(lamda=lamda,sigma=sigma,K=K,w=w)
+}
+\end{lstlisting}
+
+\section{Model Criterion}
+\vspace{0.5cm}
+ \mbox{
+   \begin{tabular}{ c c c c}
+   \hline \\[-0.75ex]
+   \hspace{1cm} \texttt{gcv\_fun} &  \hspace{1cm} \textit{Generalized Cross-Validation} criterion& \hspace{2cm} & \hspace{1cm}\\
+   \\[-0.75ex] 
+   \hline\\[-1ex]
+   \end{tabular}%
+ }
+\subsection*{Description}
+This function is used to compute the \textit{Generalized Cross-Validation} criterion for model evaluation. Its arguments are:
+\begin{itemize}
+\item \texttt{ob} is used to specify the object created from the \texttt{Pen\_Max\_Likelihood} function;
+\item \texttt{y} is used for the vector of observed values;
+\item \texttt{tt} is used to specify the vector of values $\left\lbrace t_{1},\dots,t_{J} \right\rbrace \in \mathcal{T}$.
+\end{itemize}
+
+\subsection*{\texttt{R}-Code}
+\begin{lstlisting}
+gcv_fun <- function(tt, y, ob){
+  Binv <- solve(t(B)%*%B+length(y)*(ob$lamda)*(ob$sigma)*ob$K,diag(n))
+  H <- B%*%(Binv)%*%t(B)
+  yhat <- H%*%y[1,]
+  den = 1 - sum(diag(H))/length(tt) # load(matrixcalc)
+  y.diff = yhat - y[1,]
+  return(mean((y.diff/den)^2))
+}
+\end{lstlisting}
+\vspace{0.5cm}
+ \mbox{
+   \begin{tabular}{ c c c c}
+   \hline \\[-0.75ex]
+   \hspace{1cm} \texttt{gic\_fun} &  \hspace{1cm} \textit{Generalized Information Criterion} & \hspace{2.5cm} & \\
+   \\[-0.75ex] 
+   \hline\\[-1ex]
+   \end{tabular}%
+ }
+\subsection*{Description} 
+This function is used to compute the \textit{Generalized Information Criterion} for model evaluation. Its arguments are:
+\begin{itemize}
+\item \texttt{ob} is used to specify the object created from the \texttt{Pen\_Max\_Likelihood} function;
+\item \texttt{y} is used for the vector of observed values;
+\item \texttt{tt} is used to specify the vector of values $\left\lbrace t_{1},\dots,t_{J} \right\rbrace \in \mathcal{T}$.
+\end{itemize}
+\subsection*{\texttt{R}-Code}
+\begin{lstlisting}
+gic_fun <- function(y,ob,n){
+  gamma <- diag(as.vector(y[1,]-B%*%ob$w))
+  one <- rep(1,length(y))
+  
+  R1 <- rbind(t(B)%*%B+length(y)*(ob$lamda)*(ob$sigma)*ob$K,t(one)%*%gamma%*%B/(ob$sigma))
+  R2 <- rbind(t(B)%*%gamma%*%one/(ob$sigma),length(y)/(2*(ob$sigma)))
+  R <- cbind(R1,R2)
+  R <- R/(length(y)*(ob$sigma))
+  if(det(R) < 10^(103)) {Rinv <- solve(R,diag(n+1))} else {Rinv <- NA}
+  
+  Q1 <- rbind(t(B)%*%(gamma)^2%*%B/(ob$sigma)-(ob$lamda)*ob$K%*%ob$w%*%t(one)%*%gamma%*%B,t(one)%*%(gamma)^3%*%B/(2*(ob$sigma)^2)-t(one)%*%gamma%*%B/(2*(ob$sigma)))
+  Q2 <- rbind(t(B)%*%(gamma)^3%*%one/(2*(ob$sigma)^2)-t(B)%*%gamma%*%one/(2*(ob$sigma)),t(one)%*%(gamma)^4%*%one/(4*(ob$sigma)^3)-length(y)/(4*(ob$sigma)))
+  Q <- cbind(Q1,Q2)
+  Q <- Q/(length(y)*(ob$sigma))
+  
+  V <- ifelse(det(R) < 10^(103) & all(!is.na(Rinv)), length(y)*(log(2*pi)+1)+length(y)*log(ob$sigma)+2*sum(diag(Rinv%*%Q)), NA)
+  return(V)
+}
+\end{lstlisting}
+\vspace{0.5cm}
+ \mbox{
+   \begin{tabular}{ c c c c}
+   \hline \\[-0.75ex]
+   \hspace{1cm} \texttt{mAIC\_fun} &  \hspace{1cm} \textit{modified Akaike Information Criterion} & \hspace{1.5cm} & \\
+   \\[-0.75ex] 
+   \hline\\[-1ex]
+   \end{tabular}%
+ }
+\subsection*{Description} 
+This function is used to compute the \textit{modified AIC} method for model evaluation. Its arguments are:
+\begin{itemize}
+\item \texttt{ob} is used to specify the object created from the \texttt{Pen\_Max\_Likelihood} function;
+\item \texttt{y} is used for the vector of observed values;
+\item \texttt{tt} is used to specify the vector of values $\left\lbrace t_{1},\dots,t_{J} \right\rbrace \in \mathcal{T}$.
+\end{itemize}
+\subsection*{\texttt{R}-Code}
+\begin{lstlisting}
+mAIC_fun <- function(ob,y,n){
+  Binv <- solve(t(B)%*%B+length(y)*(ob$lamda)*(ob$sigma)*ob$K,diag(n))
+  H <- B%*%(Binv)%*%t(B)
+  return(length(y)*(log(2*pi)+1)+length(y)*log(ob$sigma)+2*sum(diag(H)))
+}
+\end{lstlisting}
+\vspace{0.5cm}
+ \mbox{
+   \begin{tabular}{ c c c c}
+   \hline \\[-0.75ex]
+   \hspace{.5cm} \texttt{gbic\_fun} &  \hspace{1cm} \textit{Generalized Bayesian Information Criterion} &\hspace{1cm} & \\
+   \\[-0.75ex] 
+   \hline\\[-1ex]
+   \end{tabular}%
+ }
+\subsection*{Description}
+This function is used to compute the \textit{Generalized Bayesian Information Criterion} for model evaluation. Its arguments are:
+\begin{itemize}
+\item \texttt{ob} is used to specify the object created from the \texttt{Pen\_Max\_Likelihood} function;
+\item \texttt{y} is used for the vector of observed values;
+\item \texttt{tt} is used to specify the vector of values $\left\lbrace t_{1},\dots,t_{J} \right\rbrace \in \mathcal{T}$.
+\end{itemize}
+The \texttt{R}-code is as follows:
+\begin{lstlisting}
+gbic <- function(y,ob,n){
+  gamma <- as.vector(y[1,]-B%*%ob$w)
+  
+  Q1 <- rbind(t(B)%*%B+length(y)*(ob$lamda)*(ob$sigma)*ob$K,t(gamma)%*%B/(ob$sigma))
+  Q2 <- rbind(t(B)%*%gamma/(ob$sigma),length(y)/(2*(ob$sigma)))
+  Q <- cbind(Q1,Q2)
+  Q <- Q/(length(y)*(ob$sigma))
+  Q.det <- det(Q)
+  vec <- eigen(ob$K)$values
+  vec <- vec[vec >= 0]
+  
+  return((length(y)+n-1)*log(ob$sigma) + length(y)*(ob$lamda)*(ob$sigma)*t(ob$w)%*%ob$K%*%ob$w/(ob$sigma) + length(y) + (length(y)-3)*log(2*pi)+
+    3*log(length(y)) + log(Q.det) - log(prod(vec)) - (n-1)*log((ob$lamda)*(ob$sigma)))
+}
+\end{lstlisting}
+\clearpage
+ \mbox{
+   \begin{tabular}{ c c c c}
+   \hline \\[-0.75ex]
+   \hspace{1cm} \texttt{GCV.Gauss\_bs} &  \hspace{1cm} \textit{Generalized Cross-Validation}$^2$ &\hspace{2cm} & \\
+   \\[-0.75ex] 
+   \hline\\[-4ex]
+   \end{tabular}%
+ }
+\subsection*{Description}
+  This function computes the \textit{Generalized Cross-Validation} criterion using the \textit{Least Squares} method without a smoothing parameter based Gaussian basis function with \textit{B-Splines}. Its arguments are:
+  \begin{itemize}
+  \item \texttt{dat} is used to specify the $N \times J$ matrix of observations;
+  \item \texttt{tt} is used to specify the vector of values $\left\lbrace t_{1},\dots,t_{J} \right\rbrace \in \mathcal{T}$;
+  \item \texttt{m} is used to specify the number of basis functions applied to the function.
+  \end{itemize} 
+  This function is used run for illustrative purpose (see section~\ref{foreach})
+  \subsection*{\texttt{R}-Code}
+  \begin{lstlisting}
+   S = NULL
+   GCV.Gauss_bs = function(dat,tt,m){
+     
+     range <- diff(range(tt))
+     kn <- seq(min(tt) - (range/(m-3))*3, max(tt) + (range/(m-3))*3, by = range/(m-3))
+     myu <- kn[3:(m+2)]
+     h <- diff(kn,lag = 2)/3
+      
+     B <- matrix(0,length(tt),(m))
+     for (j in 1:m){
+       B[,j] <- exp(-0.5*(tt-myu[j])^2/(h[1]^2))
+     }
+     Binv <- solve(t(B)%*%B,diag(m))
+     S <- B%*%Binv%*%t(B)
+     xhat <- S%*%dat
+     den <- 1 - sum(diag(S))/length(tt)
+     x.diff <- xhat - dat
+     return(mean((x.diff/den)^2)) # GCV value
+  }
+    \end{lstlisting}

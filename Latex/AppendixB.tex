@@ -1,0 +1,142 @@
+% Appendix Template
+
+\chapter{Derivations and Proofs} % Main appendix title
+
+\label{AppendixB} % Change X to a consecutive letter; for referencing this appendix elsewhere, use \ref{AppendixX}
+
+\lhead{Appendix B. \emph{Derivations and Proofs}} % Change X to a consecutive letter; this is for the header on each page - perhaps a shortened title
+
+\section{Karhunen-Loeve proofs}
+
+The coefficients in theorem~\ref{kl_expansion} satisfy the following:
+\begin{enumerate}
+\item $\mathbb{E}\left[x_i\right] = 0,\text{ }\forall i \in \mathbb{N}$;
+\item $\mathbb{E}\left[x_i x_j\right] = \delta_{ij} \lambda_j, \text{ }\forall i,j \in \mathbb{N}$;
+\item $\text{Var}\left[x_j\right] = \lambda_i$,
+\end{enumerate}
+
+\subsubsection*{Proof}
+
+1. $\mathbb{E}\left[x_i\right] = 0,\text{ }\forall i \in \mathbb{N}$
+\begin{align}
+\mathbb{E}\left[x_i\right] &= \mathbb{E}\left[\int_{D} X_t e_i(t)\mathrm{dt}\right] \nonumber \\
+&= \int_{\Omega}\int_{D} X_t(\omega) e_i(t)\mathrm{dt} \mathrm{d}\mathbb{P}(\omega) \nonumber \\
+&= \int_{D} \int_{\Omega} X_t(\omega) e_i(t) \mathrm{d}\mathbb{P}(\omega)\mathrm{dt} \text{ (Fubini)} \nonumber \\
+&= \int_{D} \mathbb{E}\left[X_t\right] e_i(t) \mathrm{dt} = 0 \text{ ($X_t$ is a centered process)} \quad \text{  }_{\blacksquare} \nonumber
+\end{align}
+
+2. $\mathbb{E}\left[x_i x_j\right] = \delta_{ij} \lambda_j, \text{ }\forall i,j \in \mathbb{N}$
+\begin{align}
+\mathbb{E}\left[x_i x_j\right] &= \mathbb{E}\left[\left(\int_{D} X_s e_i(s)\mathrm{ds}\right) \left(\int_{D} X_t e_j(t)\mathrm{dt}\right)\right] \nonumber \\
+&= \mathbb{E}\left[\int_{D} \int_{D} X_s e_i(s) X_t e_j(t)\mathrm{ds}\mathrm{dt}\right] \nonumber \\
+&= \int_{D} \int_{D}\mathbb{E}\left[X_s X_t\right] e_i(s) e_j(t)\mathrm{ds}\mathrm{dt} \nonumber \\
+&= \int_{D} \left(\int_{D} \Psi(s,t) e_j(t) \mathrm{dt}\right) e_i(s) \mathrm{ds} \nonumber \\
+&= \int_{D} \left[\Psi e_j\right](s) e_i(s) \mathrm{ds} \text{ from (\ref{KL-1})} \nonumber \\
+&= \langle \Psi e_j, e_i \rangle \nonumber \\
+&= \langle \lambda_j e_j, e_i \rangle \nonumber \\
+&= \lambda_j \delta_{ij}  \quad \text{  }_{\blacksquare} \nonumber
+\end{align}
+
+3. $\text{Var}\left[x_j\right] = \lambda_i, \text{ }\forall i \in \mathbb{N}$
+\begin{align}
+\text{Var}\left[x_i\right] &= \mathbb{E}\left[\left(x_i - \mathbb{E}\left[x_i\right]\right)^2\right] \nonumber \\
+&= \mathbb{E}\left[x_i^2\right] \text{ } \left(\text{because }\mathbb{E}\left[x_i\right] = 0\right) \nonumber \\
+&= \lambda_i \quad \text{  }_{\blacksquare} \nonumber
+\end{align}
+
+\subsection*{Proof of theorem~\ref{kl_expansion}}
+Let $\Psi$ be the Hilbert-Schmidt operator defined as in section~\ref{KL-1}. $\Psi$ has a complete set of eigenvectors $\{e_i\}$ in $L^2(D)$ and non-negative eigenvalues $\{\lambda_i\}$.
+Consider the following equation:
+\begin{equation*}
+\epsilon_n(t) := \mathbb{E}\left[\left(X_t - \sum_{i=1}^{n} x_i e_i(t)\right)^2\right].
+\end{equation*}
+The rest of the proof results in showing that $\lim\limits_{n \rightarrow \infty} \epsilon_n(t) = 0$ uniformly in $D$
+\begin{align}
+\epsilon_n(t) &= \mathbb{E}\left[\left(X_t - \sum_{i=1}^{n} x_i e_i(t)\right)^2\right] \nonumber \\
+&= \mathbb{E}\left[X_t^2\right] -2\mathbb{E}\left[X_t \sum_{i=1}^{n} x_i e_i(t)\right] + \mathbb{E}\left[\sum_{i,j = 1}^{n} x_i x_j e_i(t) e_j(t)\right] \nonumber
+\end{align}
+$\mathbb{E}\left[X_t^2\right] = \Psi(t,t)$, and
+\begin{align}
+\mathbb{E}\left[X_t \sum_{i=1}^{n} x_i e_i(t)\right] &= \mathbb{E}\left[X_t \sum_{i=1}^{n} \left(\int_D X_s e_i(s)\mathrm{ds}\right)e_i(t)\right] \nonumber \\
+&= \sum_{i=1}^{n}\left(\int_D \mathbb{E}\left[X_t X_s\right] e_i(s) \mathrm{ds}\right)e_i(t) \nonumber \\
+&= \sum_{i=1}^{n}\left(\int_D \Psi(t,s) e_i(s) \mathrm{ds}\right)e_i(t) \nonumber \\
+&= \sum_{i=1}^{n} \left[\Psi e_i\right](t) e_i(t) \nonumber \\
+&= \sum_{i=1}^{n} \lambda_i e_i(t)^2 \nonumber
+\end{align}
+
+In a similar fashion, $\mathbb{E}\left[\sum_{i,j = 1}^{n} x_i x_j e_i(t) e_j(t)\right] = \sum_{i=1}^{n} \lambda_i e_i(t)^2$. Therefore,
+\begin{equation*}
+\epsilon_n(t) =\Psi(t,t) - \sum_{i=1}^{n} \lambda_i e_i(t)e_i(t)
+\end{equation*}
+By invoking the \underline{Mercer's Theorem},
+\begin{equation*}
+\lim\limits_{n \rightarrow \infty} \epsilon_n(t) = 0 \quad \text{  }_{\blacksquare}
+\end{equation*}
+
+\section{Derivation of \textbf{\textit{J}}-matrix}
+$\bm{J}_{\phi_1 \phi_2}$ is a square matrix involving the cross-product of vectors of basis functions $\bm{\phi_1}(t)$ and $\bm{\phi_2}(t)$ with length $m$. It is defined as $\bm{J}_{\phi_1 \phi_2} = \int_{\mathcal{T}} \bm{\phi_1}(t)\bm{\phi_2}'(t)\mathrm{dt}$. If the basis functions are othogonal (e.g. Fourier basis, B-Splines basis, etc...) then $\bm{J}_{\phi_1 \phi_2} = \mathbb{I}_{m}$ with $m$ being the length of vectors of basis functions. If the basis functions are not orthogonal (e.g. Gaussian basis), then $\bm{J}_{\phi_1 \phi_2}$ is evaluated analytically or numerically. \\
+Let $\phi_1(t;\mu_1 ,\sigma^2_1) = \exp \left(-\dfrac{\left(t-\mu_1\right)^2}{2\sigma^2_1}\right)$ and $\phi_2(t;\mu_2 ,\sigma^2_2) = \exp \left(-\dfrac{\left(t-\mu_2\right)^2}{2\sigma^2_2}\right)$ be two Gaussian basis functions. Then the $ij^{th}$ element of the matrix $\bm{J}_{\phi_1 \phi_2}$ is expressed as follows:
+
+\begin{align}
+\int_{\mathcal{T}} \phi_1(t) \phi_2(t)\mathrm{dt} &= \int_{\mathcal{T}} \exp \left(-\dfrac{\left(t-\mu_1\right)^2}{2\sigma^2_1}\right) \exp \left(-\dfrac{\left(t-\mu_1\right)^2}{2\sigma^2_2}\right)\mathrm{dt} \nonumber \\
+&= \int_{\mathcal{T}} \exp \left(- \left[\dfrac{\left(t-\mu_1\right)^2}{2\sigma^2_1} + \dfrac{\left(t-\mu_1\right)^2}{2\sigma^2_2}\right]\right)\mathrm{dt} \nonumber \\
+&= \int_{\mathcal{T}} \exp \left(- \left[\dfrac{\left(\sigma^2_1+\sigma^2_2\right) t^2 -2\left(\mu_1\sigma^2_2+\mu_2\sigma^2_1\right)t+\mu^2_2\sigma^2_1+\mu^2_1\sigma^2_2}{2\sigma^2_1\sigma^2_2}\right]\right)\mathrm{dt} \nonumber \\
+&= \int_{\mathcal{T}} \exp \left(- \left[\dfrac{t^2 -2\dfrac{\mu_1\sigma^2_2+\mu_2\sigma^2_1}{\sigma^2_1+\sigma^2_2}t+\dfrac{\mu^2_2\sigma^2_1+\mu^2_1\sigma^2_2}{\sigma^2_1+\sigma^2_2}}{2\dfrac{\sigma^2_1\sigma^2_2}{\sigma^2_1+\sigma^2_2}}\right]\right)\mathrm{dt} \nonumber
+\end{align}
+Let $\sigma_{12} = \sqrt{\dfrac{\sigma^2_1\sigma^2_2}{\sigma^2_1+\sigma^2_2}}$, $\mu_{12} = \dfrac{\mu_1\sigma^2_2+\mu_2\sigma^2_1}{\sigma^2_1+\sigma^2_2}$  and $\zeta = \dfrac{t^2 -2\dfrac{\mu_1\sigma^2_2+\mu_2\sigma^2_1}{\sigma^2_1+\sigma^2_2}t+\dfrac{\mu^2_2\sigma^2_1+\mu^2_1\sigma^2_2}{\sigma^2_1+\sigma^2_2}}{2\dfrac{\sigma^2_1\sigma^2_2}{\sigma^2_1+\sigma^2_2}}$.\\
+\\
+Suppose that $\kappa$ is the term required to complete the square in $\zeta$ i.e.
+\begin{equation*}
+\kappa = \dfrac{\left(\dfrac{\mu^2_2\sigma^2_1+\mu^2_1\sigma^2_2}{\sigma^2_1+\sigma^2_2}\right)^2 - \left(\dfrac{\mu^2_2\sigma^2_1+\mu^2_1\sigma^2_2}{\sigma^2_1+\sigma^2_2}\right)^2}{\dfrac{2\sigma^2_1\sigma^2_2}{\sigma^2_1+\sigma^2_2}} = 0
+\end{equation*}
+Adding this term to $\zeta$ gives
+\begin{align}
+\zeta &= \dfrac{t^2 -2\dfrac{\mu_1\sigma^2_2+\mu_2\sigma^2_1}{\sigma^2_1+\sigma^2_2}t+\left(\dfrac{\mu^2_2\sigma^2_1+\mu^2_1\sigma^2_2}{\sigma^2_1+\sigma^2_2}\right)^2}{2\dfrac{\sigma^2_1\sigma^2_2}{\sigma^2_1+\sigma^2_2}}+\dfrac{\dfrac{\mu_1\sigma^2_2+\mu_2\sigma^2_1}{\sigma^2_1+\sigma^2_2}-\left(\dfrac{\mu^2_2\sigma^2_1+\mu^2_1\sigma^2_2}{\sigma^2_1+\sigma^2_2}\right)^2}{2\dfrac{\sigma^2_1\sigma^2_2}{\sigma^2_1+\sigma^2_2}} \nonumber \\
+&= \dfrac{\left(t-\dfrac{\mu_1\sigma^2_2+\mu_2\sigma^2_1}{\sigma^2_1+\sigma^2_2}\right)^2}{2\dfrac{\sigma^2_1\sigma^2_2}{\sigma^2_1+\sigma^2_2}} + \dfrac{\left(\mu_1-\mu_2\right)^2}{2\left(\sigma_1^2+\sigma^2_2\right)} \nonumber \\
+&= \dfrac{\left(t-\mu_{12}\right)^2}{2\sigma^2_{12}}+\dfrac{\left(\mu_1-\mu_2\right)^2}{2\left(\sigma_1^2+\sigma^2_2\right)}
+\end{align}
+Therefore,
+\begin{align}
+\int_{\mathcal{T}} \phi_1(t) \phi_2(t)\mathrm{dt} &= \int_{\mathcal{T}} \exp \left[\dfrac{\left(t-\mu_{12}\right)^2}{2\sigma^2_{12}}\right] \exp \left[\dfrac{\left(\mu_1-\mu_2\right)^2}{2\left(\sigma_1^2+\sigma^2_2\right)}\right] \mathrm{dt} \nonumber \\
+&= \exp \left[\dfrac{\left(\mu_1-\mu_2\right)^2}{2\left(\sigma_1^2+\sigma^2_2\right)}\right] \int_{\mathcal{T}} \exp \left[\dfrac{\left(t-\mu_{12}\right)^2}{2\sigma^2_{12}}\right] \mathrm{dt} \nonumber \\
+&= \exp \left[\dfrac{\left(\mu_1-\mu_2\right)^2}{2\left(\sigma_1^2+\sigma^2_2\right)}\right] \sqrt{2\pi \sigma^2_{12}} \int_{\mathcal{T}} \dfrac{1}{\sqrt{2\pi \sigma^2_{12}}} \exp \left[\dfrac{\left(t-\mu_{12}\right)^2}{2\sigma^2_{12}}\right] \mathrm{dt} \nonumber \\
+&= \exp \left[\dfrac{\left(\mu_1-\mu_2\right)^2}{2\left(\sigma_1^2+\sigma^2_2\right)}\right] \sqrt{2\pi \sigma^2_{12}} \nonumber \\
+&= \sqrt{2\pi} \exp \left[\dfrac{\left(\mu_1-\mu_2\right)^2}{2\left(\sigma_1^2+\sigma^2_2\right)}\right] \sqrt{\dfrac{\sigma^2_1\sigma^2_2}{\sigma^2_1+\sigma^2_2}} \quad \text{  }_{\blacksquare}
+\end{align}
+
+\section{Derivation of \textbf{R}${}_{\Lambda}(\theta)$ matrix}
+
+In this section an assiduous derivation of $\bm{R}_{\bm{\Lambda}}(\bm{\theta})$ is done. The first derivatives of the log-likelihood function defined in section~\ref{PML method} are:
+\begin{align}
+& \dfrac{\partial l_{\bm{\Lambda}}(\bm{\theta})}{\partial \bm{\mathcal{B}}} = \left(\bm{Z}^T \bm{D} \bm{\Sigma}^{-1} \right) - \left(\bm{Z}^T\bm{Z} \bm{\mathcal{B}}\bm{\Sigma}^{-1} \right) - N \left(\bm{\Lambda}_M \odot \bm{\Omega} \right) \bm{\mathcal{B}} \nonumber \\
+& \text{and} \nonumber \\
+& \dfrac{\partial l_{\bm{\Lambda}}(\bm{\theta})}{\partial \bm{\Sigma}^{-1}} = \dfrac{N}{2}\bm{\Sigma}-\dfrac{1}{2}\left(\bm{D} - \bm{Z} \bm{\mathcal{B}}\right)^T \left(\bm{D} - \bm{Z} \bm{\mathcal{B}}\right). \nonumber
+\end{align}
+Hence, the second derivatives are with respect to $\left\{\bm{\mathcal{B}},\bm{\Sigma}^{-1}\right\}$ are given by:
+\begin{align}
+& \dfrac{\partial^2 l_{\bm{\Lambda}}(\bm{\theta})}{\partial \bm{\mathcal{B}} \partial \bm{\mathcal{B}}^T} = \bm{Z}^T \hat{\bm{\Sigma}}^{-1} \bm{Z} - N \left(\bm{\Lambda}_M \odot \bm{\Omega} \right) : \bm{R}_{\bm{\Lambda}}^{11}_{\bm{\Lambda}}(\bm{\theta}) \nonumber \\
+& \dfrac{\partial^2 l_{\bm{\Lambda}}(\bm{\theta})}{(\partial \bm{\mathcal{B}}) (\partial \bm{\Sigma}^{-1})^{T}} = \bm{Z}^T\bm{D} + \bm{Z}^T\bm{Z}\hat{\bm{\mathcal{B}}} : \bm{R}_{\bm{\Lambda}}^{21}_{\bm{\Lambda}}(\bm{\theta}) \nonumber \\
+& \dfrac{\partial^2 l_{\bm{\Lambda}}(\bm{\theta})}{(\partial \bm{\Sigma}^{-1})(\partial \bm{\mathcal{B}})^{T}} = N \bm{D}^T\bm{Z} + N \hat{\bm{\mathcal{B}}}^T \bm{Z}^T\bm{Z} : \bm{R}_{\bm{\Lambda}}^{12}_{\bm{\Lambda}}(\bm{\theta}) \nonumber \\
+& \dfrac{\partial^2 l_{\bm{\Lambda}}(\bm{\theta})}{(\partial \bm{\Sigma}^{-1})(\partial \bm{\Sigma}^{-1})^{T}} = \dfrac{N}{2} \mathbb{I}_{K_y} : \bm{R}_{\bm{\Lambda}}^{22}_{\bm{\Lambda}}(\bm{\theta}) \nonumber
+\end{align}
+
+\section{Derivation of \textbf{Q}${}_{\Lambda}(\theta)$ matrix}
+
+This section helps to undersand the derivation of $\bm{Q}_{\bm{\Lambda}}(\bm{\theta})$. The first derivatives of the log-likelihood function $l_{\bm{\Lambda}}(\bm{\theta})$ are:
+\begin{align}
+& \dfrac{\partial l_{\bm{\Lambda}}(\bm{\theta})}{\partial \bm{\mathcal{B}}} = \left(\bm{Z}^T \bm{D} \bm{\Sigma}^{-1} \right) - \left(\bm{Z}^T\bm{Z} \bm{\mathcal{B}}\bm{\Sigma}^{-1} \right) - N \left(\bm{\Lambda}_M \odot \bm{\Omega} \right) \bm{\mathcal{B}} \nonumber \\
+& \dfrac{\partial l_{\bm{\Lambda}}(\bm{\theta})}{\partial \bm{\Sigma}^{-1}} = \dfrac{N}{2}\bm{\Sigma}-\dfrac{1}{2}\left(\bm{D} - \bm{Z} \bm{\mathcal{B}}\right)^T \left(\bm{D} - \bm{Z} \bm{\mathcal{B}}\right). \nonumber
+\end{align}
+The first derivatives of the log-likelihood $l(\bm{Y}|\bm{\theta})$ are:
+\begin{align}
+& \dfrac{\partial l(\bm{Y}|\bm{\theta})}{\partial \bm{\mathcal{B}}} = \bm{Z}^T\bm{D}\bm{\Sigma}^{-1} - \bm{Z}^T\bm{Z}\bm{\mathcal{B}}\bm{\Sigma}^{-1} \nonumber \\
+& \dfrac{\partial l(\bm{Y}|\bm{\theta})}{\partial \bm{\Sigma}^{-1}} = \dfrac{N}{2}\bm{\Sigma}-\dfrac{1}{2}\left(\bm{D} - \bm{Z} \bm{\mathcal{B}}\right)^T \left(\bm{D} - \bm{Z} \bm{\mathcal{B}}\right) \nonumber
+\end{align}
+
+Hence, $\bm{Q}_{\bm{\Lambda}}(\bm{\theta})$ is given by:
+\begin{align}
+& \bm{Q}^{11}_{\bm{\Lambda}}(\bm{\theta}) = \left[\dfrac{\partial l_{\bm{\Lambda}}(\bm{\theta})}{\partial \bm{\mathcal{B}}}\right]\left[\dfrac{\partial l(\bm{Y}|\bm{\theta})}{\partial \bm{\mathcal{B}}}\right]^T \nonumber \\
+& \bm{Q}^{21}_{\bm{\Lambda}}(\bm{\theta}) = \left[\dfrac{\partial l_{\bm{\Lambda}}(\bm{\theta})}{\partial \bm{\mathcal{B}}}\right]\left[\dfrac{\partial l(\bm{Y}|\bm{\theta})}{\partial \bm{\Sigma}^{-1}}\right]^T \nonumber \\
+& \bm{Q}^{12}_{\bm{\Lambda}}(\bm{\theta}) = \left[\dfrac{\partial l_{\bm{\Lambda}}(\bm{\theta})}{\partial \bm{\Sigma}^{-1}}\right]\left[\dfrac{\partial l(\bm{Y}|\bm{\theta})}{\partial \bm{\mathcal{B}}}\right]^T \nonumber \\
+& \bm{Q}^{22}_{\bm{\Lambda}}(\bm{\theta}) = \left[\dfrac{\partial l_{\bm{\Lambda}}(\bm{\theta})}{\partial \bm{\Sigma}^{-1}}\right]\left[\dfrac{\partial l(\bm{Y}|\bm{\theta})}{\partial \bm{\Sigma}^{-1}}\right]^T \nonumber
+\end{align}
