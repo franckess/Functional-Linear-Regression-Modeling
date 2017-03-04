@@ -11,3 +11,5 @@ This dissertation main objective is to focus more specifically on Functional Lin
 
 ## Keywords: 
 _Functional Data Analysis_, _Basis Expansion_, _Functional Regression_, _Smoothing Techniques_.
+
+Full version: [https://open.uct.ac.za/bitstream/item/16664/thesis_sci_2015_essomba_rene_franck.pdf?sequence=1]
